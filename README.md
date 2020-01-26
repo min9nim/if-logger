@@ -49,9 +49,9 @@ import { createLogger } from "if-logger"
 
 const logger = createLogger({ level: "info" })
 
-logger.log("log text") // will be printed '[log] log text'
-logger.info("verbose text") // will be printed '[log] log text'
-logger.verbose("verbose text") // do not print
+logger.log("log-text") // will be printed '[log] log-text'
+logger.info("info-text") // will be printed '[info] info-text'
+logger.verbose("verbose-text") // do not print
 ```
 
 <br>
