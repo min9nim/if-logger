@@ -114,4 +114,15 @@ describe('logger', () => {
     // @ts-ignore
     expect(console.info.calledTwice).to.be.equal(true)
   })
+  it('should be printed formatted message', () => {
+    function format(level, tags, message) {
+      const tagstr = tags.join(',')
+      return `(${level})(${tagstr}) ${message}`
+    }
+    const logger = createLogger({format})
+
+    logger.tags(['AA', 'BB']).verbose('some text')
+    // @ts-ignore
+    expect(console.log.getCall(0).args[0]).to.be.equal('(verbose)(AA,BB) some text')
+  })
 })

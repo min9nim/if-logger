@@ -9,7 +9,13 @@ export const LOG_LEVEL = {
   all: 7,
 }
 
-export const DEFAULT_LEVEL = 'all'
+export const DEFAULT_OPTIONS = {
+  tagFilter: [],
+  levelFilter: [],
+  ifResult: true,
+  level: 'all',
+  tags: [],
+}
 
 export interface IPrintLog {
   (...args: any[]): void
@@ -35,16 +41,13 @@ interface ILoggerOption {
   levelFilter?: string[]
   tags?: string[]
   tagFilter?: string[]
+  format?: (level: string, tags: string[], message: string) => string
 }
 
-export function createLogger(options: ILoggerOption = {}): ILogger {
+export function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger {
   const logger: any = {
     options: {
-      tagFilter: [],
-      levelFilter: [],
-      ifResult: true,
-      level: DEFAULT_LEVEL,
-      tags: [],
+      ...DEFAULT_OPTIONS,
       ...options,
     },
     if(pred) {
@@ -76,11 +79,22 @@ function buildPrintLog(level: string, prop: string) {
       return
     }
     const header = [level, ...(this.options.tags || [])].map(str => '[' + str + ']').join('')
+    let message = header + ' ' + args[0]
+    if (this.options.format) {
+      if (typeof this.options.format !== 'function') {
+        throw Error('format option should be a function')
+      }
+      message = this.options.format(level, this.options.tags || [], args[0])
+    }
     if (['time', 'timeEnd'].includes(prop)) {
-      console[prop](header + ' ' + args[0])
+      console[prop](message)
       return
     }
-    console[prop](header, ...args)
+    if (!this.options.format || args.length > 1) {
+      console[prop](header, ...args)
+      return
+    }
+    console[prop](message)
   }
 }
 
