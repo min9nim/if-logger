@@ -10,10 +10,16 @@ exports.LOG_LEVEL = {
     debug: 6,
     all: 7,
 };
-exports.DEFAULT_LEVEL = 'error';
-function createLogger(options = {}) {
+exports.DEFAULT_OPTIONS = {
+    tagFilter: [],
+    levelFilter: [],
+    ifResult: true,
+    level: 'all',
+    tags: [],
+};
+function createLogger(options = exports.DEFAULT_OPTIONS) {
     const logger = {
-        options: Object.assign({ tagFilter: [], levelFilter: [], ifResult: true, level: exports.DEFAULT_LEVEL, tags: [] }, options),
+        options: Object.assign(Object.assign({}, exports.DEFAULT_OPTIONS), options),
         if(pred) {
             return createLogger(Object.assign(Object.assign({}, this.options), { ifResult: typeof pred === 'function' ? pred() : pred }));
         },
@@ -43,11 +49,22 @@ function buildPrintLog(level, prop) {
             return;
         }
         const header = [level, ...(this.options.tags || [])].map(str => '[' + str + ']').join('');
+        let message = header + ' ' + args[0];
+        if (this.options.format) {
+            if (typeof this.options.format !== 'function') {
+                throw Error('format option should be a function');
+            }
+            message = this.options.format(level, this.options.tags || [], args[0]);
+        }
         if (['time', 'timeEnd'].includes(prop)) {
-            console[prop](header + ' ' + args[0]);
+            console[prop](message);
             return;
         }
-        console[prop](header, ...args);
+        if (!this.options.format || args.length > 1) {
+            console[prop](header, ...args);
+            return;
+        }
+        console[prop](message);
     };
 }
 function isGo(options, level) {

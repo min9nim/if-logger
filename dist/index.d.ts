@@ -8,7 +8,13 @@ export declare const LOG_LEVEL: {
     debug: number;
     all: number;
 };
-export declare const DEFAULT_LEVEL = "error";
+export declare const DEFAULT_OPTIONS: {
+    tagFilter: never[];
+    levelFilter: never[];
+    ifResult: boolean;
+    level: string;
+    tags: never[];
+};
 export interface IPrintLog {
     (...args: any[]): void;
     time: (label: string) => void;
@@ -31,6 +37,7 @@ interface ILoggerOption {
     levelFilter?: string[];
     tags?: string[];
     tagFilter?: string[];
+    format?: (level: string, tags: string[], message: string) => string;
 }
 export declare function createLogger(options?: ILoggerOption): ILogger;
 export {};
