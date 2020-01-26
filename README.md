@@ -15,20 +15,16 @@ npm i if-logger
 ## Example
 
 ```javascript
-import { createLogger } from "if-logger"
+import {createLogger} from 'if-logger'
 
 const logger = createLogger()
 
-logger.info("some log") // print '[info] some log'
-logger.if(true).info("some log") // print '[info] some log'
-logger.if(false).info("some log") // do not print
+logger.info('some log') // print '[info] some log'
+logger.if(true).info('some log') // print '[info] some log'
+logger.if(false).info('some log') // do not print
 
 // predicate function is usable
-logger.if(() => false).info("some log") // do not print
-
-// time, timeEnd is usable
-logger.info.time("performance test")
-logger.info.timeEnd("performance test") // print '[info] performance test 12.13423ms'
+logger.if(() => false).info('some log') // do not print
 ```
 
 <br>
@@ -49,12 +45,12 @@ logger.info.timeEnd("performance test") // print '[info] performance test 12.134
 ```
 
 ```javascript
-import { createLogger } from "if-logger"
+import {createLogger} from 'if-logger'
 
-const logger = createLogger({ level: "info" })
+const logger = createLogger({level: 'info'})
 
-logger.verbose("verbose text") // do not print
-logger.log("log text") // will be printed '[log] log text'
+logger.verbose('verbose text') // do not print
+logger.log('log text') // will be printed '[log] log text'
 ```
 
 <br>
@@ -62,14 +58,14 @@ logger.log("log text") // will be printed '[log] log text'
 ## Tagging
 
 ```javascript
-import { createLogger } from "if-logger"
+import {createLogger} from 'if-logger'
 
-const logger = createLogger({ tag: ["AA", "BB"] }) // default tags is set
+const logger = createLogger({tag: ['AA', 'BB']}) // default tags is set
 
-logger.info("some log") // print '[info][AA][BB] some log'
+logger.info('some log') // print '[info][AA][BB] some log'
 
 // tags can be changed dynamically
-logger.tags(["CC", "MM"]).info("some log") // print '[info][CC][MM] some log'
+logger.tags(['CC', 'MM']).info('some log') // print '[info][CC][MM] some log'
 ```
 
 <br>
@@ -77,13 +73,13 @@ logger.tags(["CC", "MM"]).info("some log") // print '[info][CC][MM] some log'
 ## Log level filter
 
 ```javascript
-import { createLogger } from "if-logger"
+import {createLogger} from 'if-logger'
 
-const logger = createLogger({ level: "all", levelFilter: ["error", "info"] })
+const logger = createLogger({level: 'all', levelFilter: ['error', 'info']})
 
-logger.error("some text") // print
-logger.info("some text") // print
-logger.log("some text") // do not print
+logger.error('some text') // print
+logger.info('some text') // print
+logger.log('some text') // do not print
 ```
 
 <br>
@@ -91,13 +87,27 @@ logger.log("some text") // do not print
 ## Tag filter
 
 ```javascript
-import { createLogger } from "if-logger"
+import {createLogger} from 'if-logger'
 
-const logger = createLogger({ level: "all", tagFilter: ["AB", "BB"] })
+const logger = createLogger({level: 'all', tagFilter: ['AB', 'BB']})
 
-logger.tags(["AA", "BB"]).error("some text") // print
-logger.tags(["CC", "DD"]).info("some text") // do not print
-logger.tags(["EE"]).log("some text") // do not print
-logger.tags(["AA"]).log("some text") // print
-logger.tags(["AA", "ZZ"]).log("some text") // print
+logger.tags(['AA', 'BB']).error('some text') // print
+logger.tags(['CC', 'DD']).info('some text') // do not print
+logger.tags(['EE']).log('some text') // do not print
+logger.tags(['AA']).log('some text') // print
+logger.tags(['AA', 'ZZ']).log('some text') // print
+```
+
+<br>
+
+## Performance test is usable
+
+```javascript
+import {createLogger} from 'if-logger'
+
+const logger = createLogger()
+
+logger.info.time('performance test')
+// .. some biz logic excuted
+logger.info.timeEnd('performance test') // print '[info] performance test 12.13423ms'
 ```

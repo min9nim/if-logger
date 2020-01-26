@@ -1,6 +1,6 @@
 {
   "name": "if-logger",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "`if-logger` is a logger that can be set to log or not dynamically",
   "keywords": [
     "logger"
