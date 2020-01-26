@@ -1,10 +1,10 @@
 ## if-logger
 
-`if-logger` is a logger that whether logging or not is set dynamically
+`if-logger` is a logger that can be set to log or not dynamically
 
 <br>
 
-## install
+## Install
 
 ```
 npm i if-logger
@@ -12,7 +12,7 @@ npm i if-logger
 
 <br>
 
-## example
+## Example
 
 ```javascript
 import { createLogger } from "if-logger"
@@ -28,22 +28,24 @@ logger.if(() => false).info("some log") // do not print
 
 // time, timeEnd is usable
 logger.info.time("performance test")
-logger.info.timeEnd("performance test") // print [info] performance test 12.13423sms
+logger.info.timeEnd("performance test") // print '[info] performance test 12.13423ms'
 ```
 
 <br>
 
-## log level
+## Log level
 
-```
-off: 0,
-error: 1,
-warn: 2,
-log: 3,
-info: 4,
-verbose: 5,
-debug: 6,
-all: 7,
+```javascript
+{
+  off: 0,
+  error: 1,
+  warn: 2,
+  log: 3,
+  info: 4,
+  verbose: 5,
+  debug: 6,
+  all: 7,   // default
+}
 ```
 
 ```javascript
@@ -57,14 +59,13 @@ logger.log("log text") // will be printed '[log] log text'
 
 <br>
 
-## tagging
+## Tagging
 
 ```javascript
 import { createLogger } from "if-logger"
 
 const logger = createLogger({ tag: ["AA", "BB"] }) // default tags is set
 
-// tags is prepended
 logger.info("some log") // print '[info][AA][BB] some log'
 
 // tags can be changed dynamically
@@ -73,7 +74,7 @@ logger.tags(["CC", "MM"]).info("some log") // print '[info][CC][MM] some log'
 
 <br>
 
-## level filter
+## Log level filter
 
 ```javascript
 import { createLogger } from "if-logger"
@@ -87,7 +88,7 @@ logger.log("some text") // do not print
 
 <br>
 
-## tag filter
+## Tag filter
 
 ```javascript
 import { createLogger } from "if-logger"
