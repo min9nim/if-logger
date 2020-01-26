@@ -1,7 +1,7 @@
 {
   "name": "if-logger",
-  "version": "0.0.1",
-  "description": "Conditional logger on runtime",
+  "version": "0.0.2",
+  "description": "`if-logger` is a logger that can be set to log or not dynamically",
   "keywords": [
     "logger"
   ],
