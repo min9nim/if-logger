@@ -110,7 +110,7 @@ const logger = createLogger()
 
 logger.info.time("performance test")
 // .. some biz logic excuted
-logger.info.timeEnd("performance test") // print '[info] performance test 12.13423ms'
+logger.info.timeEnd("performance test") // print '[info] performance test 12ms'
 ```
 
 <br>
