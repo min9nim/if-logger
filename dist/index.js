@@ -31,7 +31,7 @@ function createLogger(options = exports.DEFAULT_OPTIONS) {
         if (['off', 'all'].includes(level)) {
             return;
         }
-        const prop = ['error', 'warn', 'info', 'debug'].includes(level) ? level : 'log';
+        const prop = ['error', 'warn', 'debug'].includes(level) ? level : 'log'; // console.info 는 디버깅을 위해 제외해둠
         logger[level] = buildPrintLog(level, prop);
         logger[level].time = buildPrintLog(level, 'time').bind(logger);
         logger[level].timeEnd = buildPrintLog(level, 'timeEnd').bind(logger);
@@ -56,13 +56,15 @@ function buildPrintLog(level, prop) {
             }
             message = this.options.format(level, this.options.tags || [], args[0]);
         }
-        if (['time', 'timeEnd'].includes(prop)) {
-            console[prop](message);
-            return;
-        }
-        if (!this.options.format || args.length > 1) {
+        else if (args.length > 1 || typeof args[0] === 'object') {
             console[prop](header, ...args);
             return;
+        }
+        if (['time', 'timeEnd'].includes(prop)) {
+            // console[prop](message)
+            // return
+            message = time[prop](message);
+            prop = 'log';
         }
         console[prop](message);
     };
@@ -82,4 +84,21 @@ function isGo(options, level) {
     }
     return true;
 }
+const time = {
+    timeLabels: {},
+    time(label) {
+        if (this.timeLabels[label]) {
+            throw Error(`duplicate label [${label}]`);
+        }
+        this.timeLabels[label] = Date.now();
+    },
+    timeEnd(label) {
+        const asisTime = this.timeLabels[label];
+        if (!asisTime) {
+            throw Error(`Not found label [${label}]`);
+        }
+        this.timeLabels[label] = undefined;
+        return label + ' ' + (Date.now() - asisTime) + 'ms';
+    },
+};
 //# sourceMappingURL=index.js.map

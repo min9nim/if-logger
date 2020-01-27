@@ -139,5 +139,21 @@ print object directly when object passed
 import { createLogger } from "if-logger"
 const logger = createLogger()
 
-logger.verbose({ a: 1 }) // print {a:1}
+logger.verbose({ a: 1 }) // print [verbose] {a:1}
+logger.verbose({ a: 1 }, { b: 2 }) // print [verbose] {a:1} {b:2}
+```
+
+<br>
+
+## function argument
+
+function parameter is possible
+
+```javascript
+import { createLogger } from "if-logger"
+const logger = createLogger()
+
+logger.verbose(() => {
+  console.log("some text")
+}) // print 'some text'
 ```
