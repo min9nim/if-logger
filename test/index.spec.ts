@@ -1,5 +1,5 @@
 import sinon from 'sinon'
-import {createLogger} from '../src'
+import {createLogger} from '../src/index'
 import {expect} from 'chai'
 import {timer} from 'mingutils'
 
@@ -121,5 +121,14 @@ describe('logger', () => {
     expect(console.log.getCall(0).args[0]).to.be.deep.equal('[log]')
     // @ts-ignore
     expect(console.log.getCall(0).args[1]).to.be.deep.equal({a: 1})
+  })
+  it('should be called function parameter', () => {
+    const logger = createLogger()
+    const fn = sinon.spy()
+
+    logger.info(fn)
+
+    expect(fn.calledOnce).to.be.equal(true)
+    expect(fn.getCall(0).args[0]).to.be.equal(undefined)
   })
 })
