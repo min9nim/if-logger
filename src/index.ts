@@ -1,73 +1,5 @@
-import chalk from 'chalk'
-
-export const LOG_LEVEL = {
-  off: {
-    priority: 0,
-  },
-  error: {
-    priority: 1,
-    color: 'red',
-  },
-  warn: {
-    priority: 2,
-    color: 'yellow',
-  },
-  log: {
-    priority: 3,
-    color: 'white',
-  },
-  info: {
-    priority: 4,
-    color: 'green',
-  },
-  verbose: {
-    priority: 5,
-    color: 'gray',
-  },
-  debug: {
-    priority: 6,
-    color: 'blue',
-  },
-  all: {
-    priority: 7,
-  },
-}
-
-export const DEFAULT_OPTIONS: ILoggerOption = {
-  tagFilter: [],
-  levelFilter: [],
-  level: 'all',
-  tags: [],
-  transports: [consoleTransport],
-}
-
-export interface IPrintLog {
-  (...args: any[]): void
-  time: (label: string) => void
-  timeEnd: (label: string) => void
-}
-
-export interface ILogger {
-  error: IPrintLog
-  warn: IPrintLog
-  log: IPrintLog
-  info: IPrintLog
-  verbose: IPrintLog
-  debug: IPrintLog
-  options: ILoggerOption
-  isGo: (level: string) => boolean
-  if: (pred: (() => boolean) | boolean) => ILogger
-  tags: (tags: string[]) => ILogger
-}
-
-interface ILoggerOption {
-  level?: string
-  levelFilter?: string[]
-  tags?: string[]
-  tagFilter?: string[]
-  format?: (level: string, tags: string[], message: string) => string
-  transports?: ((level: string, message: string, colorMessage: string) => any)[]
-}
+import {getColorMessage, DEFAULT_OPTIONS, LOG_LEVEL, isGo} from './helper'
+import {ILoggerOption, ILogger} from './types'
 
 export function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger {
   const logger: any = {
@@ -116,42 +48,28 @@ function buildPrintLog(level: string, prop: string) {
       console.log(header, ...args)
       return
     }
-    const colorMessage = getColorMessage(level, message)
-    if (['time', 'timeEnd'].includes(prop)) {
-      message = time[prop](message)
-      if (prop === 'time') {
-        return
-      }
-    }
-    if (!this.options.transports) {
-      console.warn('transports is not defined')
+
+    if (prop === 'time') {
+      time.time(message)
       return
     }
+    if (prop === 'timeEnd') {
+      message = time.timeEnd(message)
+    }
+    if (!this.options.transports) {
+      console.warn('[error] transports is not defined')
+      return
+    }
+    const colorMessage = getColorMessage(level, message)
     return this.options.transports.map(transport => transport(level, message, colorMessage))
   }
-}
-
-function isGo(options, level: string) {
-  if (!options.ifResult) {
-    return false
-  }
-  if (LOG_LEVEL[options.level].priority < LOG_LEVEL[level].priority) {
-    return false
-  }
-  if (options.levelFilter.length > 0 && !options.levelFilter.includes(level)) {
-    return false
-  }
-  if (options.tagFilter.length > 0 && !options.tagFilter.some(tag => options.tags.includes(tag))) {
-    return false
-  }
-  return true
 }
 
 const time = {
   timeLabels: {},
   time(label: string) {
     if (this.timeLabels[label]) {
-      console.warn(`duplicate label [${label}]`)
+      console.warn(`[error] duplicate label [${label}]`)
       return
     }
     this.timeLabels[label] = Date.now()
@@ -159,36 +77,10 @@ const time = {
   timeEnd(label: string) {
     const asisTime = this.timeLabels[label]
     if (!asisTime) {
-      console.warn(`Not found label [${label}]`)
-      return
+      console.warn(`[error] Not found label [${label}]`)
+      return ''
     }
     this.timeLabels[label] = undefined
     return label + ' ' + (Date.now() - asisTime) + 'ms'
   },
-}
-
-export function consoleTransport(level: string, message: string, colorMessage: string | string[]) {
-  if (!isNode()) {
-    if (!console[level]) {
-      console.log(...colorMessage)
-      return
-    }
-    console[level](...colorMessage)
-    return
-  }
-  if (!console[level]) {
-    console.log(colorMessage)
-    return
-  }
-  console[level](colorMessage)
-}
-
-export function getColorMessage(level: string, message: string) {
-  return isNode()
-    ? chalk[LOG_LEVEL[level].color](message)
-    : ['%c' + message, 'color: ' + LOG_LEVEL[level].color]
-}
-
-export function isNode() {
-  return typeof process !== 'undefined' && process.versions && process.versions.node
 }

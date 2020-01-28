@@ -1,5 +1,6 @@
 import sinon from 'sinon'
-import {createLogger, consoleTransport} from '../src/index'
+import {createLogger} from '../src/index'
+import {consoleTransport} from '../src/helper'
 import {expect} from 'chai'
 import {timer} from 'mingutils'
 
