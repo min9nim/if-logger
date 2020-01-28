@@ -166,14 +166,15 @@ logger.verbose(() => {
 
 ```javascript
 import { createLogger, consoleTransport } from "if-logger"
+// consoleTransport is default transport
 const logger = createLogger({ transports: [consoleTransport, customTransport] })
-logger.verbose("some text")
+logger.debug("some text")
 function customTransport(level, message, colorMessage) {
-  // your transport action
   /*
-   * level: 'verbose'
+   * level: 'debug'
    * message: 'some text'
-   * colorMessage: 'some text'    // colored
+   * colorMessage: ['\x1b[36m%s\x1b[0m', 'some text'] (on node) or ['%csome text', 'color: cyan'] (on browser)
    */
+  // your transport action
 }
 ```
