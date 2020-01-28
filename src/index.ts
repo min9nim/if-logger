@@ -1,6 +1,28 @@
 import {getColorMessage, DEFAULT_OPTIONS, LOG_LEVEL, isGo} from './helper'
 import {ILoggerOption, ILogger} from './types'
 
+class TimeManager {
+  timeLabels = {}
+  time(label: string) {
+    if (this.timeLabels[label]) {
+      console.warn(`[error] duplicate label [${label}]`)
+      return
+    }
+    this.timeLabels[label] = Date.now()
+  }
+  timeEnd(label: string) {
+    const asisTime = this.timeLabels[label]
+    if (!asisTime) {
+      console.warn(`[error] Not found label [${label}]`)
+      return ''
+    }
+    this.timeLabels[label] = undefined
+    return label + ' ' + (Date.now() - asisTime) + 'ms'
+  }
+}
+
+const timeMgr = new TimeManager()
+
 export function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger {
   const logger: any = {
     options: {
@@ -50,11 +72,11 @@ function buildPrintLog(level: string, prop: string) {
     }
 
     if (prop === 'time') {
-      time.time(message)
+      timeMgr.time(message)
       return
     }
     if (prop === 'timeEnd') {
-      message = time.timeEnd(message)
+      message = timeMgr.timeEnd(message)
     }
     if (!this.options.transports) {
       console.warn('[error] transports is not defined')
@@ -63,24 +85,4 @@ function buildPrintLog(level: string, prop: string) {
     const colorMessage = getColorMessage(level, message)
     return this.options.transports.map(transport => transport(level, message, colorMessage))
   }
-}
-
-const time = {
-  timeLabels: {},
-  time(label: string) {
-    if (this.timeLabels[label]) {
-      console.warn(`[error] duplicate label [${label}]`)
-      return
-    }
-    this.timeLabels[label] = Date.now()
-  },
-  timeEnd(label: string) {
-    const asisTime = this.timeLabels[label]
-    if (!asisTime) {
-      console.warn(`[error] Not found label [${label}]`)
-      return ''
-    }
-    this.timeLabels[label] = undefined
-    return label + ' ' + (Date.now() - asisTime) + 'ms'
-  },
 }
