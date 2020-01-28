@@ -168,7 +168,7 @@ const time = {
 }
 
 export function consoleTransport(level: string, message: string, colorMessage: string | string[]) {
-  if (window) {
+  if (!isNode()) {
     if (!console[level]) {
       console.log(...colorMessage)
       return
@@ -184,7 +184,11 @@ export function consoleTransport(level: string, message: string, colorMessage: s
 }
 
 export function getColorMessage(level: string, message: string) {
-  return typeof process !== 'undefined' && process.versions && process.versions.node
+  return isNode()
     ? chalk[LOG_LEVEL[level].color](message)
     : ['%c' + message, 'color: ' + LOG_LEVEL[level].color]
+}
+
+export function isNode() {
+  return typeof process !== 'undefined' && process.versions && process.versions.node
 }
