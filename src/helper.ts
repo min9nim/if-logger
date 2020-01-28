@@ -27,7 +27,7 @@ export const LOG_LEVEL = {
   },
   debug: {
     priority: 6,
-    color: 'blue',
+    color: 'cyan',
   },
   all: {
     priority: 7,
