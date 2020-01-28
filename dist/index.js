@@ -24,7 +24,7 @@ exports.LOG_LEVEL = {
     },
     verbose: {
         priority: 5,
-        color: 'yellow',
+        color: 'gray',
     },
     debug: {
         priority: 6,
@@ -75,7 +75,8 @@ function buildPrintLog(level, prop) {
         let message = header + ' ' + args[0];
         if (this.options.format) {
             if (typeof this.options.format !== 'function') {
-                throw Error('format option should be a function');
+                console.warn('format option should be a function');
+                return;
             }
             message = this.options.format(level, this.options.tags || [], args[0]);
         }
@@ -83,7 +84,7 @@ function buildPrintLog(level, prop) {
             console.log(header, ...args);
             return;
         }
-        const colorMessage = chalk_1.default[exports.LOG_LEVEL[level].color](message);
+        const colorMessage = getColorMessage(level, message);
         if (['time', 'timeEnd'].includes(prop)) {
             message = time[prop](message);
             if (prop === 'time') {
@@ -91,7 +92,8 @@ function buildPrintLog(level, prop) {
             }
         }
         if (!this.options.transports) {
-            throw Error('transports is not defined');
+            console.warn('transports is not defined');
+            return;
         }
         return this.options.transports.map(transport => transport(level, message, colorMessage));
     };
@@ -115,20 +117,30 @@ const time = {
     timeLabels: {},
     time(label) {
         if (this.timeLabels[label]) {
-            throw Error(`duplicate label [${label}]`);
+            console.warn(`duplicate label [${label}]`);
+            return;
         }
         this.timeLabels[label] = Date.now();
     },
     timeEnd(label) {
         const asisTime = this.timeLabels[label];
         if (!asisTime) {
-            throw Error(`Not found label [${label}]`);
+            console.warn(`Not found label [${label}]`);
+            return;
         }
         this.timeLabels[label] = undefined;
         return label + ' ' + (Date.now() - asisTime) + 'ms';
     },
 };
 function consoleTransport(level, message, colorMessage) {
+    if (window) {
+        if (!console[level]) {
+            console.log(...colorMessage);
+            return;
+        }
+        console[level](...colorMessage);
+        return;
+    }
     if (!console[level]) {
         console.log(colorMessage);
         return;
@@ -136,4 +148,10 @@ function consoleTransport(level, message, colorMessage) {
     console[level](colorMessage);
 }
 exports.consoleTransport = consoleTransport;
+function getColorMessage(level, message) {
+    return typeof process !== 'undefined' && process.versions && process.versions.node
+        ? chalk_1.default[exports.LOG_LEVEL[level].color](message)
+        : ['%c' + message, 'color: ' + exports.LOG_LEVEL[level].color];
+}
+exports.getColorMessage = getColorMessage;
 //# sourceMappingURL=index.js.map

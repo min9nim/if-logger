@@ -57,5 +57,6 @@ interface ILoggerOption {
     transports?: ((level: string, message: string, colorMessage: string) => any)[];
 }
 export declare function createLogger(options?: ILoggerOption): ILogger;
-export declare function consoleTransport(level: string, message: string, colorMessage: string): void;
+export declare function consoleTransport(level: string, message: string, colorMessage: string | string[]): void;
+export declare function getColorMessage(level: string, message: string): any;
 export {};
