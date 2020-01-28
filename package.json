@@ -10,7 +10,8 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -p tsconfig.json --declaration --outDir dist",
-    "test": "mocha -r ts-node/register test/**/*.spec.ts"
+    "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "dev": "ts-node test/test"
   },
   "repository": {
     "type": "git",
@@ -27,5 +28,7 @@
     "tslib": "^1.10.0",
     "typescript": "^3.7.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "chalk": "^3.0.0"
+  }
 }

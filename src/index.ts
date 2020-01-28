@@ -1,20 +1,44 @@
+import chalk from 'chalk'
+
 export const LOG_LEVEL = {
-  off: 0,
-  error: 1,
-  warn: 2,
-  log: 3,
-  info: 4,
-  verbose: 5,
-  debug: 6,
-  all: 7,
+  off: {
+    priority: 0,
+  },
+  error: {
+    priority: 1,
+    color: 'red',
+  },
+  warn: {
+    priority: 2,
+    color: 'yellow',
+  },
+  log: {
+    priority: 3,
+    color: 'white',
+  },
+  info: {
+    priority: 4,
+    color: 'green',
+  },
+  verbose: {
+    priority: 5,
+    color: 'yellow',
+  },
+  debug: {
+    priority: 6,
+    color: 'blue',
+  },
+  all: {
+    priority: 7,
+  },
 }
 
-export const DEFAULT_OPTIONS = {
+export const DEFAULT_OPTIONS: ILoggerOption = {
   tagFilter: [],
   levelFilter: [],
-  ifResult: true,
   level: 'all',
   tags: [],
+  transports: [consoleTransport],
 }
 
 export interface IPrintLog {
@@ -42,12 +66,14 @@ interface ILoggerOption {
   tags?: string[]
   tagFilter?: string[]
   format?: (level: string, tags: string[], message: string) => string
+  transports?: ((level: string, message: string, colorMessage: string) => any)[]
 }
 
 export function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger {
   const logger: any = {
     options: {
       ...DEFAULT_OPTIONS,
+      ifResult: true,
       ...options,
     },
     if(pred) {
@@ -61,8 +87,7 @@ export function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger 
     if (['off', 'all'].includes(level)) {
       return
     }
-    const prop = ['error', 'warn', 'debug'].includes(level) ? level : 'log' // console.info 는 디버깅을 위해 제외해둠
-    logger[level] = buildPrintLog(level, prop)
+    logger[level] = buildPrintLog(level, level)
     logger[level].time = buildPrintLog(level, 'time').bind(logger)
     logger[level].timeEnd = buildPrintLog(level, 'timeEnd').bind(logger)
   })
@@ -80,23 +105,27 @@ function buildPrintLog(level: string, prop: string) {
     }
     const header = [level, ...(this.options.tags || [])].map(str => '[' + str + ']').join('')
     let message = header + ' ' + args[0]
+
     if (this.options.format) {
       if (typeof this.options.format !== 'function') {
         throw Error('format option should be a function')
       }
       message = this.options.format(level, this.options.tags || [], args[0])
     } else if (args.length > 1 || typeof args[0] === 'object') {
-      console[prop](header, ...args)
+      console.log(header, ...args)
       return
     }
+    const colorMessage = chalk[LOG_LEVEL[level].color](message)
     if (['time', 'timeEnd'].includes(prop)) {
-      // console[prop](message)
-      // return
       message = time[prop](message)
-      prop = 'log'
+      if (prop === 'time') {
+        return
+      }
     }
-
-    console[prop](message)
+    if (!this.options.transports) {
+      throw Error('transports is not defined')
+    }
+    return this.options.transports.map(transport => transport(level, message, colorMessage))
   }
 }
 
@@ -104,7 +133,7 @@ function isGo(options, level: string) {
   if (!options.ifResult) {
     return false
   }
-  if (LOG_LEVEL[options.level] < LOG_LEVEL[level]) {
+  if (LOG_LEVEL[options.level].priority < LOG_LEVEL[level].priority) {
     return false
   }
   if (options.levelFilter.length > 0 && !options.levelFilter.includes(level)) {
@@ -132,4 +161,11 @@ const time = {
     this.timeLabels[label] = undefined
     return label + ' ' + (Date.now() - asisTime) + 'ms'
   },
+}
+
+export function consoleTransport(level: string, message: string, colorMessage: string) {
+  if (!console[level]) {
+    console.log(colorMessage)
+  }
+  console[level](colorMessage)
 }

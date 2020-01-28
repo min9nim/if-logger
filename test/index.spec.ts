@@ -1,133 +1,126 @@
 import sinon from 'sinon'
-import {createLogger} from '../src/index'
+import {createLogger, consoleTransport} from '../src/index'
 import {expect} from 'chai'
 import {timer} from 'mingutils'
 
+let transport: any = consoleTransport
 describe('logger', () => {
-  const originLog = console.log
-  const originTime = console.time
-  const originTimeEnd = console.timeEnd
-  const originWarn = console.warn
-  const originError = console.error
+  const origin = transport
   beforeEach(() => {
-    console.log = sinon.spy()
-    console.time = sinon.spy()
-    console.timeEnd = sinon.spy()
-    console.warn = sinon.spy()
-    console.error = sinon.spy()
+    transport = sinon.spy()
   })
   afterEach(() => {
-    console.log = originLog
-    console.time = originTime
-    console.timeEnd = originTimeEnd
-    console.warn = originWarn
-    console.error = originError
+    transport = origin
   })
-  it('should be called console.log', () => {
-    const logger = createLogger({level: 'all'})
+  it('should be called transport', () => {
+    const logger = createLogger({level: 'all', transports: [transport]})
     logger.info('test')
-    // @ts-ignore
-    expect(console.log.getCall(0).args[0]).to.be.equal('[info] test')
+    expect(transport.getCall(0).args[0]).to.be.equal('info')
+    expect(transport.getCall(0).args[1]).to.be.equal('[info] test')
   })
-  it('should not be called console.log when log_level is higher than current log', () => {
-    const logger = createLogger({level: 'warn'})
+  it('should not be called transport when log_level is higher than current log', () => {
+    const logger = createLogger({level: 'warn', transports: [transport]})
     logger.info('test')
-    // @ts-ignore
-    expect(console.log.calledOnce).to.be.equal(false)
+    expect(transport.calledOnce).to.be.equal(false)
   })
   it('should be called console.warn when called logger.warn', () => {
-    const logger = createLogger({level: 'warn'})
+    const logger = createLogger({level: 'warn', transports: [transport]})
     logger.warn('test')
-    // @ts-ignore
-    expect(console.warn.calledOnce).to.be.equal(true)
+
+    expect(transport.getCall(0).args[0]).to.be.equal('warn')
+    expect(transport.getCall(0).args[1]).to.be.equal('[warn] test')
   })
   it('should be called console.error when called logger.error', () => {
-    const logger = createLogger({level: 'all'})
+    const logger = createLogger({level: 'all', transports: [transport]})
     logger.error('test')
-    // @ts-ignore
-    expect(console.error.calledOnce).to.be.equal(true)
+
+    expect(transport.calledOnce).to.be.equal(true)
+    expect(transport.getCall(0).args[0]).to.be.equal('error')
+    expect(transport.getCall(0).args[1]).to.be.equal('[error] test')
   })
   it('should be printed elapsed time', async () => {
-    const logger = createLogger({level: 'info'})
+    const logger = createLogger({level: 'info', transports: [transport]})
     logger.info.time('time check')
     await timer(100)
     logger.info.timeEnd('time check')
-    // @ts-ignore
-    expect(console.log.getCall(0).args[0]).to.be.equal(undefined)
-    // @ts-ignore
-    expect(/\[info\] time check 1\d\dms/.test(console.log.getCall(1).args[0])).to.be.equal(true)
+    expect(/\[info\] time check 1\d\dms/.test(transport.getCall(0).args[1])).to.be.equal(true)
   })
-  it('should not be called console.log when pred return false', () => {
-    const logger = createLogger({level: 'info'})
+  it('should not be called transport when pred return false', () => {
+    const logger = createLogger({level: 'info', transports: [transport]})
     logger.if(() => false).info('info')
-    // @ts-ignore
-    expect(console.log.calledOnce).to.be.equal(false)
+
+    expect(transport.calledOnce).to.be.equal(false)
   })
-  it('should not be called console.log when pred is false', () => {
-    const logger = createLogger({level: 'info'})
+  it('should not be called transport when pred is false', () => {
+    const logger = createLogger({level: 'info', transports: [transport]})
     logger.if(false).info('info')
-    // @ts-ignore
-    expect(console.log.calledOnce).to.be.equal(false)
+
+    expect(transport.calledOnce).to.be.equal(false)
     logger.info('info')
-    // @ts-ignore
-    expect(console.log.calledOnce).to.be.equal(true)
+
+    expect(transport.calledOnce).to.be.equal(true)
   })
-  it('should be called console.log when pred return true', () => {
-    const logger = createLogger({level: 'info'})
+  it('should be called transport when pred return true', () => {
+    const logger = createLogger({level: 'info', transports: [transport]})
     logger.if(() => true).info('info')
-    // @ts-ignore
-    expect(console.log.calledOnce).to.be.equal(true)
+
+    expect(transport.calledOnce).to.be.equal(true)
   })
-  it('should be called console.log when pred is true', () => {
-    const logger = createLogger({level: 'info'})
+  it('should be called transport when pred is true', () => {
+    const logger = createLogger({level: 'info', transports: [transport]})
     logger.if(true).info('info')
-    // @ts-ignore
-    expect(console.log.calledOnce).to.be.equal(true)
+
+    expect(transport.calledOnce).to.be.equal(true)
   })
   it('should be printed tags', () => {
-    const logger = createLogger({level: 'all', tags: ['a', 'b']})
+    const logger = createLogger({level: 'all', tags: ['a', 'b'], transports: [transport]})
     logger.info('hello')
-    // @ts-ignore
-    expect(console.log.getCall(0).args[0]).to.be.equal('[info][a][b] hello')
+
+    expect(transport.getCall(0).args[1]).to.be.equal('[info][a][b] hello')
   })
   it('should be filtered tags when tagFilter is set', () => {
-    const logger = createLogger({level: 'all', tags: ['a', 'b'], tagFilter: ['a']})
+    const logger = createLogger({
+      level: 'all',
+      tags: ['a', 'b'],
+      tagFilter: ['a'],
+      transports: [transport],
+    })
     logger.info('hello')
-    // @ts-ignore
-    expect(console.log.getCall(0).args[0]).to.be.equal('[info][a][b] hello')
+
+    expect(transport.getCall(0).args[1]).to.be.equal('[info][a][b] hello')
     logger.tags(['c']).info('hello2')
-    // @ts-ignore
-    expect(console.log.getCall(1)).to.be.equal(null)
+
+    expect(transport.getCall(1)).to.be.equal(null)
     logger.tags(['a']).info('hello3')
-    // @ts-ignore
-    expect(console.log.getCall(1).args[0]).to.be.equal('[info][a] hello3')
+
+    expect(transport.getCall(1).args[1]).to.be.equal('[info][a] hello3')
   })
   it('should be printed formatted message', () => {
     function format(level, tags, message) {
       const tagstr = tags.join(',')
       return `(${level})(${tagstr}) ${message}`
     }
-    const logger = createLogger({format})
+    const logger = createLogger({format, transports: [transport]})
 
     logger.tags(['AA', 'BB']).verbose('some text')
-    // @ts-ignore
-    expect(console.log.getCall(0).args[0]).to.be.equal('(verbose)(AA,BB) some text')
+
+    expect(transport.getCall(0).args[1]).to.be.equal('(verbose)(AA,BB) some text')
   })
   it('should be printed object', () => {
-    const logger = createLogger()
-
+    const origin = console.log
+    console.log = sinon.spy()
+    const logger = createLogger({transports: [transport]})
     logger.log({a: 1})
     // @ts-ignore
-    expect(console.log.getCall(0).args[0]).to.be.deep.equal('[log]')
+    expect(console.log.getCall(0).args[0]).to.be.equal('[log]')
     // @ts-ignore
     expect(console.log.getCall(0).args[1]).to.be.deep.equal({a: 1})
+    console.log = origin
   })
   it('should be called function parameter', () => {
-    const logger = createLogger()
+    const logger = createLogger({transports: [transport]})
     const fn = sinon.spy()
-
     logger.info(fn)
-
     expect(fn.calledOnce).to.be.equal(true)
     expect(fn.getCall(0).args[0]).to.be.equal(undefined)
   })
