@@ -52,11 +52,11 @@ export function consoleTransport(level: string, message: string, colorMessage: s
 }
 
 export function getColorMessage(level: string, message: string): string[] {
+  const color = LOG_LEVEL[level].color
   if (isNode()) {
-    const str = chalk[LOG_LEVEL[level].color](message)
-    return [str.slice(0, 5) + '%s' + str.slice(-4), str.slice(5, -4)]
+    return [NODE_COLOR[color], message]
   }
-  return ['%c' + message, 'color: ' + LOG_LEVEL[level].color]
+  return ['%c' + message, 'color:' + color]
 }
 
 export function isNode() {
@@ -77,4 +77,13 @@ export function isGo(options, level: string) {
     return false
   }
   return true
+}
+
+const NODE_COLOR = {
+  red: '\x1b[31m%s\x1b[0m',
+  yellow: '\x1b[33m%s\x1b[0m',
+  white: '%s',
+  green: '\x1b[32m%s\x1b[0m',
+  gray: '\x1b[90m%s\x1b[0m',
+  cyan: '\x1b[36m%s\x1b[0m',
 }

@@ -4,6 +4,14 @@
 
 <br>
 
+## Feachers
+
+- No dependencies on runtime
+- Color support both node and browser
+- Typescript support
+
+<br>
+
 ## Install
 
 ```

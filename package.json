@@ -1,6 +1,6 @@
 {
   "name": "if-logger",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "`if-logger` is a logger that can be set to log or not dynamically",
   "keywords": [
     "logger"
@@ -29,7 +29,5 @@
     "tslib": "^1.10.0",
     "typescript": "^3.7.4"
   },
-  "dependencies": {
-    "chalk": "^3.0.0"
-  }
+  "dependencies": {}
 }
