@@ -116,7 +116,7 @@ function buildPrintLog(level: string, prop: string) {
       console.log(header, ...args)
       return
     }
-    const colorMessage = chalk[LOG_LEVEL[level].color](message)
+    const colorMessage = getColorMessage(level, message)
     if (['time', 'timeEnd'].includes(prop)) {
       message = time[prop](message)
       if (prop === 'time') {
@@ -167,10 +167,24 @@ const time = {
   },
 }
 
-export function consoleTransport(level: string, message: string, colorMessage: string) {
+export function consoleTransport(level: string, message: string, colorMessage: string | string[]) {
+  if (window) {
+    if (!console[level]) {
+      console.log(...colorMessage)
+      return
+    }
+    console[level](...colorMessage)
+    return
+  }
   if (!console[level]) {
     console.log(colorMessage)
     return
   }
   console[level](colorMessage)
+}
+
+export function getColorMessage(level: string, message: string) {
+  return typeof process !== 'undefined' && process.versions && process.versions.node
+    ? chalk[LOG_LEVEL[level].color](message)
+    : ['%c' + message, 'color: ' + LOG_LEVEL[level].color]
 }

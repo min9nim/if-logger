@@ -12,7 +12,8 @@
     "baseUrl": ".",
     "rootDir": "./src",
     "types": [
-      "mocha"
+      "mocha",
+      "node"
     ],
     "paths": {
       "@/*": [
