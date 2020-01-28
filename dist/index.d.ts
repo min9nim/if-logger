@@ -1,20 +1,36 @@
 export declare const LOG_LEVEL: {
-    off: number;
-    error: number;
-    warn: number;
-    log: number;
-    info: number;
-    verbose: number;
-    debug: number;
-    all: number;
+    off: {
+        priority: number;
+    };
+    error: {
+        priority: number;
+        color: string;
+    };
+    warn: {
+        priority: number;
+        color: string;
+    };
+    log: {
+        priority: number;
+        color: string;
+    };
+    info: {
+        priority: number;
+        color: string;
+    };
+    verbose: {
+        priority: number;
+        color: string;
+    };
+    debug: {
+        priority: number;
+        color: string;
+    };
+    all: {
+        priority: number;
+    };
 };
-export declare const DEFAULT_OPTIONS: {
-    tagFilter: never[];
-    levelFilter: never[];
-    ifResult: boolean;
-    level: string;
-    tags: never[];
-};
+export declare const DEFAULT_OPTIONS: ILoggerOption;
 export interface IPrintLog {
     (...args: any[]): void;
     time: (label: string) => void;
@@ -38,6 +54,8 @@ interface ILoggerOption {
     tags?: string[];
     tagFilter?: string[];
     format?: (level: string, tags: string[], message: string) => string;
+    transports?: ((level: string, message: string, colorMessage: string) => any)[];
 }
 export declare function createLogger(options?: ILoggerOption): ILogger;
+export declare function consoleTransport(level: string, message: string, colorMessage: string): void;
 export {};

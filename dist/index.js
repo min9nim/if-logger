@@ -1,25 +1,49 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const chalk_1 = tslib_1.__importDefault(require("chalk"));
 exports.LOG_LEVEL = {
-    off: 0,
-    error: 1,
-    warn: 2,
-    log: 3,
-    info: 4,
-    verbose: 5,
-    debug: 6,
-    all: 7,
+    off: {
+        priority: 0,
+    },
+    error: {
+        priority: 1,
+        color: 'red',
+    },
+    warn: {
+        priority: 2,
+        color: 'yellow',
+    },
+    log: {
+        priority: 3,
+        color: 'white',
+    },
+    info: {
+        priority: 4,
+        color: 'green',
+    },
+    verbose: {
+        priority: 5,
+        color: 'yellow',
+    },
+    debug: {
+        priority: 6,
+        color: 'blue',
+    },
+    all: {
+        priority: 7,
+    },
 };
 exports.DEFAULT_OPTIONS = {
     tagFilter: [],
     levelFilter: [],
-    ifResult: true,
     level: 'all',
     tags: [],
+    transports: [consoleTransport],
 };
 function createLogger(options = exports.DEFAULT_OPTIONS) {
     const logger = {
-        options: Object.assign(Object.assign({}, exports.DEFAULT_OPTIONS), options),
+        options: Object.assign(Object.assign(Object.assign({}, exports.DEFAULT_OPTIONS), { ifResult: true }), options),
         if(pred) {
             return createLogger(Object.assign(Object.assign({}, this.options), { ifResult: typeof pred === 'function' ? pred() : pred }));
         },
@@ -31,8 +55,7 @@ function createLogger(options = exports.DEFAULT_OPTIONS) {
         if (['off', 'all'].includes(level)) {
             return;
         }
-        const prop = ['error', 'warn', 'debug'].includes(level) ? level : 'log'; // console.info 는 디버깅을 위해 제외해둠
-        logger[level] = buildPrintLog(level, prop);
+        logger[level] = buildPrintLog(level, level);
         logger[level].time = buildPrintLog(level, 'time').bind(logger);
         logger[level].timeEnd = buildPrintLog(level, 'timeEnd').bind(logger);
     });
@@ -57,23 +80,27 @@ function buildPrintLog(level, prop) {
             message = this.options.format(level, this.options.tags || [], args[0]);
         }
         else if (args.length > 1 || typeof args[0] === 'object') {
-            console[prop](header, ...args);
+            console.log(header, ...args);
             return;
         }
+        const colorMessage = chalk_1.default[exports.LOG_LEVEL[level].color](message);
         if (['time', 'timeEnd'].includes(prop)) {
-            // console[prop](message)
-            // return
             message = time[prop](message);
-            prop = 'log';
+            if (prop === 'time') {
+                return;
+            }
         }
-        console[prop](message);
+        if (!this.options.transports) {
+            throw Error('transports is not defined');
+        }
+        return this.options.transports.map(transport => transport(level, message, colorMessage));
     };
 }
 function isGo(options, level) {
     if (!options.ifResult) {
         return false;
     }
-    if (exports.LOG_LEVEL[options.level] < exports.LOG_LEVEL[level]) {
+    if (exports.LOG_LEVEL[options.level].priority < exports.LOG_LEVEL[level].priority) {
         return false;
     }
     if (options.levelFilter.length > 0 && !options.levelFilter.includes(level)) {
@@ -101,4 +128,12 @@ const time = {
         return label + ' ' + (Date.now() - asisTime) + 'ms';
     },
 };
+function consoleTransport(level, message, colorMessage) {
+    if (!console[level]) {
+        console.log(colorMessage);
+        return;
+    }
+    console[level](colorMessage);
+}
+exports.consoleTransport = consoleTransport;
 //# sourceMappingURL=index.js.map
