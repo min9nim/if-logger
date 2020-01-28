@@ -42,26 +42,21 @@ export const DEFAULT_OPTIONS: ILoggerOption = {
   transports: [consoleTransport],
 }
 
-export function consoleTransport(level: string, message: string, colorMessage: string | string[]) {
-  if (!isNode()) {
-    if (!console[level]) {
-      console.log(...colorMessage)
-      return
-    }
-    console[level](...colorMessage)
-    return
-  }
+export function consoleTransport(level: string, message: string, colorMessage: string[]) {
   if (!console[level]) {
-    console.log(colorMessage)
+    console.log(...colorMessage)
     return
   }
-  console[level](colorMessage)
+  console[level](...colorMessage)
+  return
 }
 
-export function getColorMessage(level: string, message: string) {
-  return isNode()
-    ? chalk[LOG_LEVEL[level].color](message)
-    : ['%c' + message, 'color: ' + LOG_LEVEL[level].color]
+export function getColorMessage(level: string, message: string): string[] {
+  if (isNode()) {
+    const str = chalk[LOG_LEVEL[level].color](message)
+    return [str.slice(0, 5) + '%s' + str.slice(-4), str.slice(5, -4)]
+  }
+  return ['%c' + message, 'color: ' + LOG_LEVEL[level].color]
 }
 
 export function isNode() {

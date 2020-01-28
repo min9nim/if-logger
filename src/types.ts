@@ -23,5 +23,5 @@ export interface ILoggerOption {
   tags?: string[]
   tagFilter?: string[]
   format?: (level: string, tags: string[], message: string) => string
-  transports?: ((level: string, message: string, colorMessage: string) => any)[]
+  transports?: ((level: string, message: string, colorMessage: string[]) => any)[]
 }
