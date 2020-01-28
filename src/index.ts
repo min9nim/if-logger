@@ -108,7 +108,8 @@ function buildPrintLog(level: string, prop: string) {
 
     if (this.options.format) {
       if (typeof this.options.format !== 'function') {
-        throw Error('format option should be a function')
+        console.warn('format option should be a function')
+        return
       }
       message = this.options.format(level, this.options.tags || [], args[0])
     } else if (args.length > 1 || typeof args[0] === 'object') {
@@ -123,7 +124,8 @@ function buildPrintLog(level: string, prop: string) {
       }
     }
     if (!this.options.transports) {
-      throw Error('transports is not defined')
+      console.warn('transports is not defined')
+      return
     }
     return this.options.transports.map(transport => transport(level, message, colorMessage))
   }
@@ -149,14 +151,16 @@ const time = {
   timeLabels: {},
   time(label: string) {
     if (this.timeLabels[label]) {
-      throw Error(`duplicate label [${label}]`)
+      console.warn(`duplicate label [${label}]`)
+      return
     }
     this.timeLabels[label] = Date.now()
   },
   timeEnd(label: string) {
     const asisTime = this.timeLabels[label]
     if (!asisTime) {
-      throw Error(`Not found label [${label}]`)
+      console.warn(`Not found label [${label}]`)
+      return
     }
     this.timeLabels[label] = undefined
     return label + ' ' + (Date.now() - asisTime) + 'ms'
