@@ -20,7 +20,7 @@ npm i if-logger
 
 <br>
 
-## Example
+## Usage
 
 ```javascript
 import { createLogger } from "if-logger"
