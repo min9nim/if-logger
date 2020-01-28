@@ -159,3 +159,22 @@ logger.verbose(() => {
   console.log("some text")
 }) // print 'some text'
 ```
+
+<br>
+
+## Custom transport
+
+```javascript
+import { createLogger, consoleTransport } from "if-logger"
+const logger = createLogger({ transports: [consoleTransport, customTransport] })
+const result2 = logger.verbose("some text")
+function customTransport(level, message, colorMessage) {
+  // your transport action
+  /*
+   * level: 'verbose'
+   * message: 'some text'
+   * colorMessage: ''
+   */
+  return result
+}
+```
