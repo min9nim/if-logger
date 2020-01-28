@@ -22,7 +22,7 @@ export const LOG_LEVEL = {
   },
   verbose: {
     priority: 5,
-    color: 'yellow',
+    color: 'gray',
   },
   debug: {
     priority: 6,
@@ -166,6 +166,7 @@ const time = {
 export function consoleTransport(level: string, message: string, colorMessage: string) {
   if (!console[level]) {
     console.log(colorMessage)
+    return
   }
   console[level](colorMessage)
 }
