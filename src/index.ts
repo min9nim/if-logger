@@ -17,7 +17,7 @@ class TimeManager {
       return ''
     }
     this.timeLabels[label] = undefined
-    return label + ' ' + (Date.now() - asisTime) + 'ms'
+    return Date.now() - asisTime
   }
 }
 
@@ -90,7 +90,7 @@ function buildPrintLog(level: string, prop: string) {
       return
     }
     if (prop === 'timeEnd') {
-      message = timeMgr.timeEnd(timeLabel)
+      message = message + ' ' + timeMgr.timeEnd(timeLabel) + 'ms'
     }
     if (!this.options.transports) {
       console.warn('[error] transports is not defined')
