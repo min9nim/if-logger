@@ -125,4 +125,14 @@ describe('logger', () => {
     expect(fn.calledOnce).to.be.equal(true)
     expect(fn.getCall(0).args[0]).to.be.equal(undefined)
   })
+  it('should be undefined return value', () => {
+    const logger = createLogger({transports: [transport]})
+    const result = logger.info('hello')
+    expect(result).to.be.equal(undefined)
+  })
+  it('should return result when returnValue is true', () => {
+    const logger = createLogger({transports: [transport], returnValue: true})
+    const result = logger.info('hello')
+    expect(Array.isArray(result)).to.be.equal(true)
+  })
 })

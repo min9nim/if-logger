@@ -83,6 +83,7 @@ function buildPrintLog(level: string, prop: string) {
       return
     }
     const colorMessage = getColorMessage(level, message)
-    return this.options.transports.map(transport => transport(level, message, colorMessage))
+    const result = this.options.transports.map(transport => transport(level, message, colorMessage))
+    return this.options.returnValue ? result : undefined
   }
 }

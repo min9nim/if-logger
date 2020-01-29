@@ -40,15 +40,16 @@ export const DEFAULT_OPTIONS: ILoggerOption = {
   level: 'all',
   tags: [],
   transports: [consoleTransport],
+  returnValue: false,
 }
 
 export function consoleTransport(level: string, message: string, colorMessage: string[]) {
   if (!console[level]) {
     console.log(...colorMessage)
-    return
+    return colorMessage
   }
   console[level](...colorMessage)
-  return
+  return colorMessage
 }
 
 export function getColorMessage(level: string, message: string): string[] {
