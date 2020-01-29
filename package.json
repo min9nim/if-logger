@@ -1,6 +1,6 @@
 {
   "name": "if-logger",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "`if-logger` can set whether to log dynamically",
   "keywords": [
     "logger",
@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json --declaration --outDir dist",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
-    "dev": "ts-node test/test"
+    "dev": "ts-node test"
   },
   "repository": {
     "type": "git",

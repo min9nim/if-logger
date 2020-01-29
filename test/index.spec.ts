@@ -1,6 +1,6 @@
 import sinon from 'sinon'
 import {createLogger} from '../src/index'
-import {consoleTransport} from '../src/helper'
+import {consoleTransport, getColorMessage} from '../src/helper'
 import {expect} from 'chai'
 import {timer} from 'mingutils'
 
@@ -113,8 +113,6 @@ describe('logger', () => {
     const logger = createLogger({transports: [transport]})
     logger.log({a: 1})
     // @ts-ignore
-    expect(console.log.getCall(0).args[0]).to.be.equal('[log]')
-    // @ts-ignore
     expect(console.log.getCall(0).args[1]).to.be.deep.equal({a: 1})
     console.log = origin
   })
@@ -147,5 +145,9 @@ describe('logger', () => {
     const newLogger = logger.new({tags: ['11']})
     expect(logger.options.tags).to.be.deep.equal([])
     expect(newLogger.options.tags).to.be.deep.equal(['11'])
+  })
+  it('should return object', () => {
+    const result = getColorMessage('info', {a: 1})
+    expect(result).to.be.deep.equal([{a: 1}])
   })
 })

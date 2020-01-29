@@ -1,4 +1,11 @@
-import {getColorMessage, DEFAULT_OPTIONS, LOG_LEVEL, isGo} from './helper'
+import {
+  getColorMessage,
+  getNodeColorMessage,
+  DEFAULT_OPTIONS,
+  LOG_LEVEL,
+  isGo,
+  isNode,
+} from './helper'
 import {ILoggerOption, ILogger} from './types'
 
 class TimeManager {
@@ -80,7 +87,16 @@ function buildPrintLog(level: string, prop: string) {
       }
       message = this.options.format(level, this.options.tags || [], args[0])
     } else if (args.length > 1 || typeof args[0] === 'object') {
-      console.log(header, ...args)
+      let params
+      if (isNode()) {
+        params = [header, ...args].map(param => getNodeColorMessage(level, param))
+      } else {
+        params = [header, ...args].reduce((acc, param) => {
+          acc.push(...getColorMessage(level, param))
+          return acc
+        }, [])
+      }
+      console.log(...params)
       return
     }
 

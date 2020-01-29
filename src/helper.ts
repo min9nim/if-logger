@@ -52,12 +52,22 @@ export function consoleTransport(level: string, message: string, colorMessage: s
   return colorMessage
 }
 
-export function getColorMessage(level: string, message: string): string[] {
+export function getColorMessage(level: string, message: any): any[] {
+  if (typeof message === 'object') {
+    return [message]
+  }
   const color = LOG_LEVEL[level].color
   if (isNode()) {
     return [NODE_COLOR[color], message]
   }
   return ['%c' + message, 'color:' + color]
+}
+
+export function getNodeColorMessage(level: string, message: any): any {
+  if (typeof message === 'object') {
+    return message
+  }
+  return NODE_COLOR[LOG_LEVEL[level].color].replace('%s', message)
 }
 
 export function isNode() {

@@ -177,9 +177,9 @@ logger.tags(["AA", "BB"]).verbose("some text") // print '(verbose)(AA,BB) some t
 
 <br>
 
-## Plain Object
+## Plain Object & Multiple arguments
 
-plain object is loggable
+Plain objects and multiple arguments are loggable. But the option of `format`, `transport` and the method of `time`, `timeEnd` are not available at this time. (only console output available)
 
 ```javascript
 import { createLogger } from "if-logger"
@@ -187,6 +187,7 @@ const logger = createLogger()
 
 logger.verbose({ a: 1 }) // print [verbose] {a:1}
 logger.verbose({ a: 1 }, { b: 2 }) // print [verbose] {a:1} {b:2}
+logger.verbose("aa", "bb", 11) // print [verbose] aa bb 11
 ```
 
 <br>
