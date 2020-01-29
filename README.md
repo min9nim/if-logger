@@ -97,6 +97,17 @@ logger.info("some log") // print '[info][AA][BB] some log'
 logger.tags(["CC", "MM"]).info("some log") // print '[info][CC][MM] some log'
 ```
 
+dynamic tag usable
+
+```javascript
+import { createLogger } from "if-logger"
+
+const time = () => String(new Date()).substr(16, 8)
+const logger = createLogger({ tags: [time] })
+
+logger.info("some log") // print '[info][12:40:57] some log'
+```
+
 <br>
 
 ## Log level filter

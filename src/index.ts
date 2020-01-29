@@ -57,7 +57,14 @@ function buildPrintLog(level: string, prop: string) {
       args[0]()
       return
     }
-    const header = [level, ...(this.options.tags || [])].map(str => '[' + str + ']').join('')
+    const header = [level, ...(this.options.tags || [])]
+      .map((str: any) => {
+        if (typeof str === 'function') {
+          return '[' + str() + ']'
+        }
+        return '[' + str + ']'
+      })
+      .join('')
     let message = header + ' ' + args[0]
 
     if (this.options.format) {
