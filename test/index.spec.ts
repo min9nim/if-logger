@@ -135,4 +135,17 @@ describe('logger', () => {
     const result = logger.info('hello')
     expect(Array.isArray(result)).to.be.equal(true)
   })
+  it('should be added new tags', () => {
+    const logger = createLogger({transports: [transport], tags: ['11']})
+    logger.info('hello')
+    expect(transport.getCall(0).args[1]).to.be.equal('[info][11] hello')
+    logger.addTags(['22']).info('hello')
+    expect(transport.getCall(1).args[1]).to.be.equal('[info][11][22] hello')
+  })
+  it('should return new logger', () => {
+    const logger = createLogger({transports: [transport]})
+    const newLogger = logger.new({tags: ['11']})
+    expect(logger.options.tags).to.be.deep.equal([])
+    expect(newLogger.options.tags).to.be.deep.equal(['11'])
+  })
 })

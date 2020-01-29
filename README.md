@@ -95,6 +95,9 @@ logger.info("some log") // print '[info][AA][BB] some log'
 
 // tags can be changed dynamically
 logger.tags(["CC", "MM"]).info("some log") // print '[info][CC][MM] some log'
+
+// add tags
+logger.addTags(["CC", "MM"]).info("some log") // print '[info][AA][BB][CC][MM] some log'
 ```
 
 dynamic tag usable

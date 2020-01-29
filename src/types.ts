@@ -15,6 +15,8 @@ export interface ILogger {
   isGo: (level: string) => boolean
   if: (pred: (() => boolean) | boolean) => ILogger
   tags: (tags: any[]) => ILogger
+  addTags: (tags: any[]) => ILogger
+  new: (options: ILoggerOption) => ILogger
 }
 
 export interface ILoggerOption {

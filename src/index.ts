@@ -36,6 +36,12 @@ export function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger 
     tags(tags: string[]) {
       return createLogger({...this.options, tags})
     },
+    addTags(tags: string[]) {
+      return createLogger({...this.options, tags: [...this.options.tags, ...tags]})
+    },
+    new(options: ILoggerOption) {
+      return createLogger({...this.options, ...options})
+    },
   }
   Object.keys(LOG_LEVEL).forEach(level => {
     if (['off', 'all'].includes(level)) {
