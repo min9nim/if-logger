@@ -84,12 +84,13 @@ function buildPrintLog(level: string, prop: string) {
       return
     }
 
+    const timeLabel = '[' + level + '] ' + args[0]
     if (prop === 'time') {
-      timeMgr.time(message)
+      timeMgr.time(timeLabel)
       return
     }
     if (prop === 'timeEnd') {
-      message = timeMgr.timeEnd(message)
+      message = timeMgr.timeEnd(timeLabel)
     }
     if (!this.options.transports) {
       console.warn('[error] transports is not defined')

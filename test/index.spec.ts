@@ -44,7 +44,7 @@ describe('logger', () => {
     logger.info.time('time check')
     await timer(100)
     logger.info.timeEnd('time check')
-    expect(/\[info\] time check 1\d\dms/.test(transport.getCall(0).args[1])).to.be.equal(true)
+    expect(/time check 1\d\dms/.test(transport.getCall(0).args[1])).to.be.equal(true)
   })
   it('should not be called transport when pred return false', () => {
     const logger = createLogger({level: 'info', transports: [transport]})
