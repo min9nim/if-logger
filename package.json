@@ -1,9 +1,11 @@
 {
   "name": "if-logger",
   "version": "0.4.3",
-  "description": "`if-logger` is a logger that can be set to log or not dynamically",
+  "description": "`if-logger` can set whether to log dynamically",
   "keywords": [
-    "logger"
+    "logger",
+    "if",
+    "conditional"
   ],
   "main": "dist/index.js",
   "author": "min9nim@gmail.com",

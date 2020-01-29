@@ -1,6 +1,6 @@
 ## if-logger
 
-`if-logger` is a logger that can be set to log or not dynamically
+`if-logger` can set whether to log or not dynamically
 
 <br>
 
