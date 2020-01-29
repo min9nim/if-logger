@@ -22,6 +22,8 @@ npm i if-logger
 
 ## Usage
 
+dynamically log or not
+
 ```javascript
 import { createLogger } from "if-logger"
 
@@ -33,6 +35,22 @@ logger.if(false).info("some log") // do not print
 
 // predicate function is usable
 logger.if(() => false).info("some log") // do not print
+```
+
+<br>
+
+dynamically change of level option
+
+```javascript
+import { createLogger } from "if-logger"
+
+const logger = createLogger() // default log level: 'all'
+
+logger.info("hello") // print
+logger.options.level = "log"
+logger.info("hello") // do not print
+logger.debug("hello") // do not print
+logger.warn("hello") // print
 ```
 
 <br>
