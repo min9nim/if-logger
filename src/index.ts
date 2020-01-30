@@ -5,8 +5,9 @@ import {
   LOG_LEVEL,
   isGo,
   isNode,
+  multiArgsHandler,
 } from './helper'
-import {ILoggerOption, ILogger} from './types'
+import {ILoggerOption, ILogger, ILoggerRequired} from './types'
 
 class TimeManager {
   timeLabels = {}
@@ -62,41 +63,20 @@ export function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger 
 }
 
 function buildPrintLog(level: string, prop: string) {
-  return function printLog(this: ILogger, ...args: any[]) {
+  return function printLog(this: ILoggerRequired, ...args: any[]) {
     if (!isGo(this.options, level)) {
       return
     }
     if (typeof args[0] === 'function') {
-      args[0]()
-      return
+      const result = args[0]()
+      return this.options.returnValue ? result : undefined
     }
-    const header: string = [level, ...(this.options.tags || [])]
-      .map((str: any) => {
-        if (typeof str === 'function') {
-          return '[' + str() + ']'
-        }
-        return '[' + str + ']'
-      })
-      .join('')
-    let message = header + ' ' + args[0]
-
-    if (this.options.format) {
-      if (typeof this.options.format !== 'function') {
-        console.warn('format option should be a function')
-        return
-      }
-      message = this.options.format(level, this.options.tags || [], args[0])
-    } else if (args.length > 1 || typeof args[0] === 'object') {
-      let params
-      if (isNode()) {
-        params = [header, ...args].map(param => getNodeColorMessage(level, param))
-      } else {
-        params = [...getColorMessage(level, header), ...args] // In browser, It can be applied `formatting` to only the first argument
-      }
-      console.log(...params)
-      return this.options.returnValue ? params : undefined
+    if (args.length > 1 || typeof args[0] === 'object') {
+      const result = multiArgsHandler(level, this.options.tags, args)
+      return this.options.returnValue ? result : undefined
     }
 
+    let message = this.options.format(level, this.options.tags, args[0])
     const timeLabel = '[' + level + '] ' + args[0]
     if (prop === 'time') {
       timeMgr.time(timeLabel)
@@ -105,12 +85,8 @@ function buildPrintLog(level: string, prop: string) {
     if (prop === 'timeEnd') {
       message = message + ' ' + timeMgr.timeEnd(timeLabel) + 'ms'
     }
-    if (!this.options.transports) {
-      console.warn('[error] transports is not defined')
-      return
-    }
-    const colorMessage = getColorMessage(level, message)
-    const result = this.options.transports.map(transport => transport(level, message, colorMessage))
+
+    const result = this.options.transports.map(transport => transport(level, message))
     return this.options.returnValue ? result : undefined
   }
 }

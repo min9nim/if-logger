@@ -1,6 +1,6 @@
 import sinon from 'sinon'
 import {createLogger} from '../src/index'
-import {consoleTransport, getColorMessage} from '../src/helper'
+import {consoleTransport, getColorMessage, getNodeColorMessage} from '../src/helper'
 import {expect} from 'chai'
 import {timer} from 'mingutils'
 
@@ -147,7 +147,7 @@ describe('logger', () => {
     expect(newLogger.options.tags).to.be.deep.equal(['11'])
   })
   it('should return object', () => {
-    const result = getColorMessage('info', {a: 1})
-    expect(result).to.be.deep.equal([{a: 1}])
+    const result = getNodeColorMessage('info', {a: 1})
+    expect(result).to.be.deep.equal({a: 1})
   })
 })

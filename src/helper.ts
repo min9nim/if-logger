@@ -1,5 +1,13 @@
-import chalk from 'chalk'
 import {ILoggerOption} from './types'
+
+const NODE_COLOR = {
+  red: '\x1b[31m%s\x1b[0m',
+  yellow: '\x1b[33m%s\x1b[0m',
+  white: '%s',
+  green: '\x1b[32m%s\x1b[0m',
+  gray: '\x1b[90m%s\x1b[0m',
+  cyan: '\x1b[36m%s\x1b[0m',
+}
 
 export const LOG_LEVEL = {
   off: {
@@ -41,9 +49,11 @@ export const DEFAULT_OPTIONS: ILoggerOption = {
   tags: [],
   transports: [consoleTransport],
   returnValue: false,
+  format: defaultFormat,
 }
 
-export function consoleTransport(level: string, message: string, colorMessage: string[]) {
+export function consoleTransport(level: string, message: string) {
+  const colorMessage = getColorMessage(level, message)
   if (!console[level]) {
     console.log(...colorMessage)
     return colorMessage
@@ -87,11 +97,23 @@ export function isGo(options, level: string) {
   return true
 }
 
-const NODE_COLOR = {
-  red: '\x1b[31m%s\x1b[0m',
-  yellow: '\x1b[33m%s\x1b[0m',
-  white: '%s',
-  green: '\x1b[32m%s\x1b[0m',
-  gray: '\x1b[90m%s\x1b[0m',
-  cyan: '\x1b[36m%s\x1b[0m',
+export function getTagString(str: any): string {
+  return '[' + (typeof str === 'function' ? str() : str) + ']'
+}
+
+export function getHeaderString(strList: string[]): string {
+  return strList.map(getTagString).join('')
+}
+
+export function defaultFormat(level: string, tags: any[] = [], message: string): string {
+  return getHeaderString([level, ...tags]) + ' ' + message
+}
+
+export function multiArgsHandler(level: string, tags: any[] = [], args: any[]) {
+  const header = getHeaderString([level, ...tags])
+  const result = isNode()
+    ? [header, ...args].map(param => getNodeColorMessage(level, param))
+    : [...getColorMessage(level, header), ...args] // In browser, It can be applied `formatting` to only the first argument
+  console.log(...result)
+  return result
 }

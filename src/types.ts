@@ -19,12 +19,26 @@ export interface ILogger {
   new: (options: ILoggerOption) => ILogger
 }
 
+export interface ILoggerRequired extends ILogger {
+  options: ILoggerOptionRequired
+}
+
 export interface ILoggerOption {
   level?: string
   levelFilter?: string[]
   tags?: string[]
   tagFilter?: string[]
   format?: (level: string, tags: string[], message: string) => string
-  transports?: ((level: string, message: string, colorMessage: string[]) => any)[]
+  transports?: ((level: string, message: string) => any)[]
   returnValue?: boolean
+}
+
+export interface ILoggerOptionRequired extends ILoggerOption {
+  level: string
+  levelFilter: string[]
+  tags: string[]
+  tagFilter: string[]
+  format: (level: string, tags: string[], message: string) => string
+  transports: ((level: string, message: string) => any)[]
+  returnValue: boolean
 }
