@@ -70,7 +70,7 @@ function buildPrintLog(level: string, prop: string) {
       args[0]()
       return
     }
-    const header = [level, ...(this.options.tags || [])]
+    const header: string = [level, ...(this.options.tags || [])]
       .map((str: any) => {
         if (typeof str === 'function') {
           return '[' + str() + ']'
@@ -91,13 +91,10 @@ function buildPrintLog(level: string, prop: string) {
       if (isNode()) {
         params = [header, ...args].map(param => getNodeColorMessage(level, param))
       } else {
-        params = [header, ...args].reduce((acc, param) => {
-          acc.push(...getColorMessage(level, param))
-          return acc
-        }, [])
+        params = [...getColorMessage(level, header), ...args] // In browser, It can be applied `formatting` to only the first argument
       }
       console.log(...params)
-      return
+      return this.options.returnValue ? params : undefined
     }
 
     const timeLabel = '[' + level + '] ' + args[0]
