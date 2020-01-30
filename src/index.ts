@@ -1,12 +1,4 @@
-import {
-  getColorMessage,
-  getNodeColorMessage,
-  DEFAULT_OPTIONS,
-  LOG_LEVEL,
-  isGo,
-  isNode,
-  multiArgsHandler,
-} from './helper'
+import {DEFAULT_OPTIONS, LOG_LEVEL, isGo, multiArgsHandler} from './helper'
 import {ILoggerOption, ILogger, ILoggerRequired} from './types'
 
 class TimeManager {
