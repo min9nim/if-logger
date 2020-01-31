@@ -127,7 +127,11 @@ export function buildPrintLog(level: string, prop: string) {
       return
     }
     if (prop === 'timeEnd') {
-      message = message + ' ' + this.timeMgr.timeEnd(timeLabel) + 'ms'
+      const time = this.timeMgr.timeEnd(timeLabel)
+      if (!time) {
+        return
+      }
+      message = message + ' ' + time + 'ms'
     }
 
     const result = this.options.transports.map(transport => transport(level, args[0], message))
