@@ -242,10 +242,11 @@ import {createLogger, consoleTransport} from 'if-logger'
 // consoleTransport is default transport
 const logger = createLogger({transports: [consoleTransport, customTransport]})
 logger.debug('some text')
-function customTransport(level, message) {
+function customTransport(level, message, formatMessage) {
   /*
    * level: 'debug'
-   * message: '[debug] some text'
+   * message: 'some text'
+   * formatMessage: '[debug] some text'
    */
   // your transport action
 }

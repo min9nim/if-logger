@@ -18,14 +18,15 @@ describe('logger', () => {
       const logger = createLogger({transports: [transport]})
       logger.info('test')
       expect(transport.getCall(0).args[0]).to.be.equal('info')
-      expect(transport.getCall(0).args[1]).to.be.equal('[info] test')
+      expect(transport.getCall(0).args[1]).to.be.equal('test')
+      expect(transport.getCall(0).args[2]).to.be.equal('[info] test')
     })
     it('should be called console.warn when called logger.warn', () => {
       const logger = createLogger({level: 'warn', transports: [transport]})
       logger.warn('test')
 
       expect(transport.getCall(0).args[0]).to.be.equal('warn')
-      expect(transport.getCall(0).args[1]).to.be.equal('[warn] test')
+      expect(transport.getCall(0).args[2]).to.be.equal('[warn] test')
     })
     describe('function parameter usable', () => {
       it('should be called function parameter', () => {
@@ -42,7 +43,7 @@ describe('logger', () => {
         logger.info.time('time check')
         await timer(100)
         logger.info.timeEnd('time check')
-        expect(/time check 1\d\dms/.test(transport.getCall(0).args[1])).to.be.equal(true)
+        expect(/time check 1\d\dms/.test(transport.getCall(0).args[2])).to.be.equal(true)
       })
     })
     describe('plain object usable', () => {
@@ -64,7 +65,7 @@ describe('logger', () => {
         const logger = createLogger({level: 'all', tags: ['a', 'b'], transports: [transport]})
         logger.info('hello')
 
-        expect(transport.getCall(0).args[1]).to.be.equal('[info][a][b] hello')
+        expect(transport.getCall(0).args[2]).to.be.equal('[info][a][b] hello')
       })
     })
     describe('tagFilter', () => {
@@ -77,13 +78,13 @@ describe('logger', () => {
         })
         logger.info('hello')
 
-        expect(transport.getCall(0).args[1]).to.be.equal('[info][a][b] hello')
+        expect(transport.getCall(0).args[2]).to.be.equal('[info][a][b] hello')
         logger.tags(['c']).info('hello2')
 
         expect(transport.getCall(1)).to.be.equal(null)
         logger.tags(['a']).info('hello3')
 
-        expect(transport.getCall(1).args[1]).to.be.equal('[info][a] hello3')
+        expect(transport.getCall(1).args[2]).to.be.equal('[info][a] hello3')
       })
     })
     describe('returnValue', () => {
@@ -108,7 +109,7 @@ describe('logger', () => {
 
         logger.tags(['AA', 'BB']).verbose('some text')
 
-        expect(transport.getCall(0).args[1]).to.be.equal('(verbose)(AA,BB) some text')
+        expect(transport.getCall(0).args[2]).to.be.equal('(verbose)(AA,BB) some text')
       })
     })
     describe('level', () => {
@@ -141,9 +142,9 @@ describe('logger', () => {
       it('should be added new tags', () => {
         const logger = createLogger({transports: [transport], tags: ['11']})
         logger.info('hello')
-        expect(transport.getCall(0).args[1]).to.be.equal('[info][11] hello')
+        expect(transport.getCall(0).args[2]).to.be.equal('[info][11] hello')
         logger.addTags(['22']).info('hello')
-        expect(transport.getCall(1).args[1]).to.be.equal('[info][11][22] hello')
+        expect(transport.getCall(1).args[2]).to.be.equal('[info][11][22] hello')
       })
     })
     describe('new', () => {

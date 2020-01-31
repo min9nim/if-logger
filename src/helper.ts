@@ -52,8 +52,8 @@ export const DEFAULT_OPTIONS: ILoggerOption = {
   format: defaultFormat,
 }
 
-export function consoleTransport(level: string, message: string) {
-  const colorMessage = getColorMessage(level, message)
+export function consoleTransport(level: string, message: string, formatMessage: string) {
+  const colorMessage = getColorMessage(level, formatMessage)
   if (!console[level]) {
     console.log(...colorMessage)
     return colorMessage

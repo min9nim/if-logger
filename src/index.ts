@@ -78,7 +78,7 @@ function buildPrintLog(level: string, prop: string) {
       message = message + ' ' + timeMgr.timeEnd(timeLabel) + 'ms'
     }
 
-    const result = this.options.transports.map(transport => transport(level, message))
+    const result = this.options.transports.map(transport => transport(level, args[0], message))
     return this.options.returnValue ? result : undefined
   }
 }

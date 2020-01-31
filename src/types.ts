@@ -30,7 +30,7 @@ export interface ILoggerOption {
   tagFilter?: string[]
   format?: (level: string, tags: Tag[], message: string) => string
   pred?: (() => boolean) | boolean
-  transports?: ((level: string, message: string) => any)[]
+  transports?: ((level: string, message: string, formatMessage: string) => any)[]
   returnValue?: boolean
 }
 
@@ -43,6 +43,6 @@ export interface ILoggerOptionRequired extends ILoggerOption {
   tagFilter: string[]
   format: (level: string, tags: Tag[], message: string) => string
   pred: (() => boolean) | boolean
-  transports: ((level: string, message: string) => any)[]
+  transports: ((level: string, message: string, formatMessage: string) => any)[]
   returnValue: boolean
 }
