@@ -189,6 +189,34 @@ logger.info.timeEnd('performance test') // print '[info] performance test 12ms'
 
 <br>
 
+Time logging is supported
+
+```javascript
+import {createLogger} from 'if-logger'
+
+const logger = createLogger()
+const sw = logger.info.stopwatch
+sw.start('test')
+// some biz logic
+sw.check('aa')
+// some biz logic
+sw.check('bb')
+// some biz logic
+sw.check('cc')
+// some biz logic
+sw.end()
+
+/* output is
+[info] [test] start
+[info] [test] aa (7ms / 7ms)
+[info] [test] bb (3ms / 10ms)
+[info] [test] cc (2ms / 12ms)
+[info] [test] end (total: 12ms)
+*/
+```
+
+<br>
+
 ## Custom format
 
 ```javascript

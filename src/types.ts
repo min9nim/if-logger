@@ -1,7 +1,10 @@
+import {Stopwatch} from './helper'
+
 export interface IPrintLog {
   (...args: any[]): void
   time: (label: string) => void
   timeEnd: (label: string) => void
+  stopwatch: Stopwatch
 }
 
 export interface ILogger {

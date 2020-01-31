@@ -1,4 +1,4 @@
-import {DEFAULT_OPTIONS, LOG_LEVEL, isGo, multiArgsHandler, consoleTransport} from './helper'
+import {DEFAULT_OPTIONS, LOG_LEVEL, isGo, multiArgsHandler, Stopwatch} from './helper'
 import {ILoggerOption, ILogger, ILoggerRequired} from './types'
 
 export * from './helper'
@@ -52,6 +52,7 @@ export function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger 
     logger[level] = buildPrintLog(level, level)
     logger[level].time = buildPrintLog(level, 'time').bind(logger)
     logger[level].timeEnd = buildPrintLog(level, 'timeEnd').bind(logger)
+    logger[level].stopwatch = new Stopwatch(buildPrintLog(level, level).bind(logger))
   })
   return logger
 }

@@ -120,3 +120,35 @@ export function multiArgsHandler(level: string, tags: any[] = [], args: any[]) {
   console.log(...result)
   return result
 }
+
+export class Stopwatch {
+  times: any = []
+  uid
+  printLog
+  constructor(printLog) {
+    this.printLog = printLog
+  }
+  start(title: string) {
+    this.uid = title
+    this.times = [Date.now()]
+    this.printLog(`[${this.uid}] start`)
+  }
+  check(label: string) {
+    if (this.times.length === 0) {
+      this.printLog('[error] start() has not yet been called')
+      return
+    }
+    this.times.push(Date.now())
+    let diff = this.times[this.times.length - 1] - this.times[this.times.length - 2]
+    let total = this.times[this.times.length - 1] - this.times[0]
+    this.printLog(`[${this.uid}] ` + label + ` (${diff}ms / ${total}ms)`)
+  }
+  reset() {
+    let total = this.times[this.times.length - 1] - this.times[0]
+    this.printLog(`[${this.uid}] end (total: ${total}ms)`)
+    this.times = []
+  }
+  end() {
+    this.reset()
+  }
+}
