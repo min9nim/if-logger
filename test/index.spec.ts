@@ -1,7 +1,12 @@
 import sinon from 'sinon'
 import createLogger, {consoleTransport, getNodeColorMessage} from '../src/index'
 import {expect} from 'chai'
-import {timer} from 'mingutils'
+
+export function timer(timeout: number) {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout)
+  })
+}
 
 let transport: any = consoleTransport
 describe('logger', () => {
