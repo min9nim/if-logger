@@ -1,5 +1,7 @@
-import {DEFAULT_OPTIONS, LOG_LEVEL, isGo, multiArgsHandler} from './helper'
+import {DEFAULT_OPTIONS, LOG_LEVEL, isGo, multiArgsHandler, consoleTransport} from './helper'
 import {ILoggerOption, ILogger, ILoggerRequired} from './types'
+
+export * from './helper'
 
 class TimeManager {
   timeLabels = {}
