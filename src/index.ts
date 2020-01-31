@@ -31,7 +31,7 @@ export function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger 
       ...options,
     },
     if(pred) {
-      return createLogger({...this.options, ifResult: typeof pred === 'function' ? pred() : pred})
+      return createLogger({...this.options, pred})
     },
     tags(tags: string[]) {
       return createLogger({...this.options, tags})

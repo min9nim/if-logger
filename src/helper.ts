@@ -82,8 +82,11 @@ export function isNode() {
 }
 
 export function isGo(options, level: string) {
-  if (!options.ifResult) {
-    return false
+  if (options.pred !== undefined) {
+    if (typeof options.pred === 'function') {
+      return options.pred()
+    }
+    return options.pred
   }
   if (LOG_LEVEL[options.level].priority < LOG_LEVEL[level].priority) {
     return false

@@ -39,26 +39,27 @@ logger.if(false).info('some log') // do not print
 
 // predicate function is usable
 logger.if(() => false).info('some log') // do not print
-
-// `.if` method return new logger
-const ifLogger = logger.if(predicate)
-ifLogger.info('some text') // print 'some text' if predicate is only true
 ```
 
 <br>
 
-dynamically change of level option
+`.if` method return new logger
 
 ```javascript
 import {createLogger} from 'if-logger'
 
-const logger = createLogger() // default log level: 'all'
-
-logger.info('hello') // print
-logger.options.level = 'log'
-logger.info('hello') // do not print
-logger.debug('hello') // do not print
-logger.warn('hello') // print
+const logger = createLogger()
+let cnt = 0
+const only3times = () => {
+  cnt++
+  return cnt < 4
+}
+const ifLogger = logger.if(only3times) // or `createLogger({pred: only3times})`
+ifLogger.info('some text 1') // print
+ifLogger.info('some text 2') // print
+ifLogger.info('some text 3') // print
+ifLogger.info('some text 4') // do not print
+ifLogger.info('some text 5') // do not print
 ```
 
 <br>
@@ -88,6 +89,25 @@ const logger = createLogger({level: 'info'})
 logger.log('log-text') // will be printed '[log] log-text'
 logger.info('info-text') // will be printed '[info] info-text'
 logger.verbose('verbose-text') // do not print
+```
+
+<br>
+
+## Dynamic change of option
+
+<br>
+`.new` method return new logger that has changed option. Other options of new logger is equal to existing logger
+
+```javascript
+import {createLogger} from 'if-logger'
+
+const logger = createLogger({level: 'info'})
+
+logger.info('hello 1') // print
+logger.verbose('hello 2') // do not print
+const logger2 = logger.new({level: 'verbose'})
+logger2.info('hello 3') // print
+logger2.verbose('hello 4') // print
 ```
 
 <br>

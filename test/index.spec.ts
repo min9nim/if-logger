@@ -150,4 +150,33 @@ describe('logger', () => {
     const result = getNodeColorMessage('info', {a: 1})
     expect(result).to.be.deep.equal({a: 1})
   })
+  it('should be evaluated when pred is function', () => {
+    const logger = createLogger({transports: [transport]})
+    let cnt = 0
+    const only3times = () => {
+      cnt++
+      return cnt < 4
+    }
+    const ifLogger = logger.if(only3times)
+    ifLogger.info('some text 1')
+    ifLogger.info('some text 2')
+    ifLogger.info('some text 3') // print 'some text' if `pred` is only true
+    ifLogger.info('some text 4')
+    ifLogger.info('some text 5')
+    expect(transport.calledThrice).to.be.equal(true)
+  })
+  it('should be usable pred option', () => {
+    let cnt = 0
+    const only3times = () => {
+      cnt++
+      return cnt < 4
+    }
+    const logger = createLogger({transports: [transport], pred: only3times})
+    logger.info('some text 1')
+    logger.info('some text 2')
+    logger.info('some text 3') // print 'some text' if `pred` is only true
+    logger.info('some text 4')
+    logger.info('some text 5')
+    expect(transport.calledThrice).to.be.equal(true)
+  })
 })
