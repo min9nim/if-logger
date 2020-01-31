@@ -177,6 +177,10 @@ logger.tags(["AA", "ZZ"]).log("some text") // print
 
 ## Performance check
 
+time, timeEnd usable
+
+> scope: `logger` object
+
 ```javascript
 import createLogger from "if-logger"
 
@@ -190,6 +194,8 @@ logger.info.timeEnd("performance test") // print '[info] performance test 12ms'
 <br>
 
 Time logging is supported
+
+> scope: `stopwatch` object
 
 ```javascript
 import createLogger from "if-logger"
