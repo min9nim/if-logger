@@ -1,29 +1,9 @@
-import {DEFAULT_OPTIONS, LOG_LEVEL, isGo, multiArgsHandler, Stopwatch} from './helper'
+import {DEFAULT_OPTIONS, LOG_LEVEL, isGo, multiArgsHandler, Stopwatch, TimeManager} from './helper'
 import {ILoggerOption, ILogger, ILoggerRequired} from './types'
 
 export * from './helper'
 
-class TimeManager {
-  timeLabels = {}
-  time(label: string) {
-    if (this.timeLabels[label]) {
-      console.warn(`[error] duplicate label [${label}]`)
-      return
-    }
-    this.timeLabels[label] = Date.now()
-  }
-  timeEnd(label: string) {
-    const asisTime = this.timeLabels[label]
-    if (!asisTime) {
-      console.warn(`[error] Not found label [${label}]`)
-      return ''
-    }
-    this.timeLabels[label] = undefined
-    return Date.now() - asisTime
-  }
-}
-
-const timeMgr = new TimeManager()
+const timeMgr = new TimeManager() // This should be a singleton object
 
 export function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger {
   const logger: any = {

@@ -121,6 +121,26 @@ export function multiArgsHandler(level: string, tags: any[] = [], args: any[]) {
   return result
 }
 
+export class TimeManager {
+  timeLabels = {}
+  time(label: string) {
+    if (this.timeLabels[label]) {
+      console.warn(`[error] duplicate label [${label}]`)
+      return
+    }
+    this.timeLabels[label] = Date.now()
+  }
+  timeEnd(label: string) {
+    const asisTime = this.timeLabels[label]
+    if (!asisTime) {
+      console.warn(`[error] Not found label [${label}]`)
+      return ''
+    }
+    this.timeLabels[label] = undefined
+    return Date.now() - asisTime
+  }
+}
+
 export class Stopwatch {
   times: any = []
   uid
