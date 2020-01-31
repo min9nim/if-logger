@@ -1,11 +1,9 @@
-import {DEFAULT_OPTIONS, LOG_LEVEL, isGo, multiArgsHandler, Stopwatch, TimeManager} from './helper'
-import {ILoggerOption, ILogger, ILoggerRequired} from './types'
+import {DEFAULT_OPTIONS, LOG_LEVEL, buildPrintLog, Stopwatch} from './helper'
+import {ILoggerOption, ILogger} from './types'
 
 export * from './helper'
 
-const timeMgr = new TimeManager() // This should be a singleton object
-
-export function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger {
+export default function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger {
   const logger: any = {
     options: {
       ...DEFAULT_OPTIONS,
@@ -35,33 +33,4 @@ export function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger 
     logger[level].stopwatch = new Stopwatch(buildPrintLog(level, level).bind(logger))
   })
   return logger
-}
-
-function buildPrintLog(level: string, prop: string) {
-  return function printLog(this: ILoggerRequired, ...args: any[]) {
-    if (!isGo(this.options, level)) {
-      return
-    }
-    if (typeof args[0] === 'function') {
-      const result = args[0]()
-      return this.options.returnValue ? result : undefined
-    }
-    if (args.length > 1 || typeof args[0] === 'object') {
-      const result = multiArgsHandler(level, this.options.tags, args)
-      return this.options.returnValue ? result : undefined
-    }
-
-    let message = this.options.format(level, this.options.tags, args[0])
-    const timeLabel = '[' + level + '] ' + args[0]
-    if (prop === 'time') {
-      timeMgr.time(timeLabel)
-      return
-    }
-    if (prop === 'timeEnd') {
-      message = message + ' ' + timeMgr.timeEnd(timeLabel) + 'ms'
-    }
-
-    const result = this.options.transports.map(transport => transport(level, args[0], message))
-    return this.options.returnValue ? result : undefined
-  }
 }

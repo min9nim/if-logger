@@ -1,4 +1,4 @@
-import {ILoggerOption} from './types'
+import {ILoggerOption, ILoggerRequired} from './types'
 
 const NODE_COLOR = {
   red: '\x1b[31m%s\x1b[0m',
@@ -50,6 +50,89 @@ export const DEFAULT_OPTIONS: ILoggerOption = {
   transports: [consoleTransport],
   returnValue: false,
   format: defaultFormat,
+}
+
+export class TimeManager {
+  timeLabels = {}
+  time(label: string) {
+    if (this.timeLabels[label]) {
+      console.warn(`[error] duplicate label [${label}]`)
+      return
+    }
+    this.timeLabels[label] = Date.now()
+  }
+  timeEnd(label: string) {
+    const asisTime = this.timeLabels[label]
+    if (!asisTime) {
+      console.warn(`[error] Not found label [${label}]`)
+      return ''
+    }
+    this.timeLabels[label] = undefined
+    return Date.now() - asisTime
+  }
+}
+
+export class Stopwatch {
+  times: any = []
+  uid
+  printLog
+  constructor(printLog) {
+    this.printLog = printLog
+  }
+  start(title: string) {
+    this.uid = title
+    this.times = [Date.now()]
+    this.printLog(`[${this.uid}] start`)
+  }
+  check(label: string) {
+    if (this.times.length === 0) {
+      this.printLog('[error] start() has not yet been called')
+      return
+    }
+    this.times.push(Date.now())
+    let diff = this.times[this.times.length - 1] - this.times[this.times.length - 2]
+    let total = this.times[this.times.length - 1] - this.times[0]
+    this.printLog(`[${this.uid}] ` + label + ` (${diff}ms / ${total}ms)`)
+  }
+  reset() {
+    let total = this.times[this.times.length - 1] - this.times[0]
+    this.printLog(`[${this.uid}] end (total: ${total}ms)`)
+    this.times = []
+  }
+  end() {
+    this.reset()
+  }
+}
+
+const timeMgr = new TimeManager() // This should be a singleton object
+
+export function buildPrintLog(level: string, prop: string) {
+  return function printLog(this: ILoggerRequired, ...args: any[]) {
+    if (!isGo(this.options, level)) {
+      return
+    }
+    if (typeof args[0] === 'function') {
+      const result = args[0]()
+      return this.options.returnValue ? result : undefined
+    }
+    if (args.length > 1 || typeof args[0] === 'object') {
+      const result = multiArgsHandler(level, this.options.tags, args)
+      return this.options.returnValue ? result : undefined
+    }
+
+    let message = this.options.format(level, this.options.tags, args[0])
+    const timeLabel = '[' + level + '] ' + args[0]
+    if (prop === 'time') {
+      timeMgr.time(timeLabel)
+      return
+    }
+    if (prop === 'timeEnd') {
+      message = message + ' ' + timeMgr.timeEnd(timeLabel) + 'ms'
+    }
+
+    const result = this.options.transports.map(transport => transport(level, args[0], message))
+    return this.options.returnValue ? result : undefined
+  }
 }
 
 export function consoleTransport(level: string, message: string, formatMessage: string) {
@@ -119,56 +202,4 @@ export function multiArgsHandler(level: string, tags: any[] = [], args: any[]) {
     : [...getColorMessage(level, header), ...args] // In browser, It can be applied `formatting` to only the first argument
   console.log(...result)
   return result
-}
-
-export class TimeManager {
-  timeLabels = {}
-  time(label: string) {
-    if (this.timeLabels[label]) {
-      console.warn(`[error] duplicate label [${label}]`)
-      return
-    }
-    this.timeLabels[label] = Date.now()
-  }
-  timeEnd(label: string) {
-    const asisTime = this.timeLabels[label]
-    if (!asisTime) {
-      console.warn(`[error] Not found label [${label}]`)
-      return ''
-    }
-    this.timeLabels[label] = undefined
-    return Date.now() - asisTime
-  }
-}
-
-export class Stopwatch {
-  times: any = []
-  uid
-  printLog
-  constructor(printLog) {
-    this.printLog = printLog
-  }
-  start(title: string) {
-    this.uid = title
-    this.times = [Date.now()]
-    this.printLog(`[${this.uid}] start`)
-  }
-  check(label: string) {
-    if (this.times.length === 0) {
-      this.printLog('[error] start() has not yet been called')
-      return
-    }
-    this.times.push(Date.now())
-    let diff = this.times[this.times.length - 1] - this.times[this.times.length - 2]
-    let total = this.times[this.times.length - 1] - this.times[0]
-    this.printLog(`[${this.uid}] ` + label + ` (${diff}ms / ${total}ms)`)
-  }
-  reset() {
-    let total = this.times[this.times.length - 1] - this.times[0]
-    this.printLog(`[${this.uid}] end (total: ${total}ms)`)
-    this.times = []
-  }
-  end() {
-    this.reset()
-  }
 }

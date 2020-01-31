@@ -1,6 +1,5 @@
 import sinon from 'sinon'
-import {createLogger} from '../src/index'
-import {consoleTransport, getColorMessage, getNodeColorMessage} from '../src/helper'
+import createLogger, {consoleTransport, getNodeColorMessage} from '../src/index'
 import {expect} from 'chai'
 import {timer} from 'mingutils'
 
