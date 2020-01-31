@@ -65,7 +65,7 @@ export class TimeManager {
     const asisTime = this.timeLabels[label]
     if (!asisTime) {
       console.warn(`[error] Not found label [${label}]`)
-      return ''
+      return
     }
     this.timeLabels[label] = undefined
     return Date.now() - asisTime
@@ -128,7 +128,7 @@ export function buildPrintLog(level: string, prop: string) {
     }
     if (prop === 'timeEnd') {
       const time = this.timeMgr.timeEnd(timeLabel)
-      if (!time) {
+      if (time === undefined) {
         return
       }
       message = message + ' ' + time + 'ms'
