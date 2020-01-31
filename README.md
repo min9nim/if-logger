@@ -122,10 +122,10 @@ const logger = createLogger({tag: ['AA', 'BB']}) // default tags is set
 logger.info('some log') // print '[info][AA][BB] some log'
 
 // tags can be changed dynamically
-logger.tags(['CC', 'MM']).info('some log') // print '[info][CC][MM] some log'
+logger.tags(['CC', 'DD']).info('some log') // print '[info][CC][DD] some log'
 
 // add tags
-logger.addTags(['CC', 'MM']).info('some log') // print '[info][AA][BB][CC][MM] some log'
+logger.addTags(['CC', 'DD']).info('some log') // print '[info][AA][BB][CC][DD] some log'
 ```
 
 dynamic tag usable
@@ -137,6 +137,10 @@ const time = () => String(new Date()).substr(16, 8)
 const logger = createLogger({tags: [time]})
 
 logger.info('some log') // print '[info][12:40:57] some log'
+// some biz logic
+logger.info('some log') // print '[info][12:41:12] some log'
+// some biz logic
+logger.info('some log') // print '[info][12:44:36] some log'
 ```
 
 <br>
