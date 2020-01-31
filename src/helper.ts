@@ -74,15 +74,15 @@ export class TimeManager {
 
 export class Stopwatch {
   times: any = []
-  uid
+  header
   printLog
   constructor(printLog) {
     this.printLog = printLog
   }
-  start(title: string) {
-    this.uid = title
+  start(title?: string) {
+    this.header = title ? `[${title}] ` : ''
     this.times = [Date.now()]
-    this.printLog(`[${this.uid}] start`)
+    this.printLog(this.header + 'start')
   }
   check(label: string) {
     if (this.times.length === 0) {
@@ -92,11 +92,11 @@ export class Stopwatch {
     this.times.push(Date.now())
     let diff = this.times[this.times.length - 1] - this.times[this.times.length - 2]
     let total = this.times[this.times.length - 1] - this.times[0]
-    this.printLog(`[${this.uid}] ` + label + ` (${diff}ms / ${total}ms)`)
+    this.printLog(this.header + label + ` (${diff}ms / ${total}ms)`)
   }
   reset() {
     let total = this.times[this.times.length - 1] - this.times[0]
-    this.printLog(`[${this.uid}] end (total: ${total}ms)`)
+    this.printLog(this.header + `end (total: ${total}ms)`)
     this.times = []
   }
   end() {
