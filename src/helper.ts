@@ -104,7 +104,7 @@ export class Stopwatch {
   }
 }
 
-const timeMgr = new TimeManager() // This should be a singleton object
+// const timeMgr = new TimeManager() // This should be a singleton object
 
 export function buildPrintLog(level: string, prop: string) {
   return function printLog(this: ILoggerRequired, ...args: any[]) {
@@ -123,11 +123,11 @@ export function buildPrintLog(level: string, prop: string) {
     let message = this.options.format(level, this.options.tags, args[0])
     const timeLabel = '[' + level + '] ' + args[0]
     if (prop === 'time') {
-      timeMgr.time(timeLabel)
+      this.timeMgr.time(timeLabel)
       return
     }
     if (prop === 'timeEnd') {
-      message = message + ' ' + timeMgr.timeEnd(timeLabel) + 'ms'
+      message = message + ' ' + this.timeMgr.timeEnd(timeLabel) + 'ms'
     }
 
     const result = this.options.transports.map(transport => transport(level, args[0], message))

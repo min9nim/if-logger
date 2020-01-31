@@ -1,4 +1,4 @@
-import {Stopwatch} from './helper'
+import {Stopwatch, TimeManager} from './helper'
 
 export interface IPrintLog {
   (...args: any[]): void
@@ -15,6 +15,7 @@ export interface ILogger {
   verbose: IPrintLog
   debug: IPrintLog
   options: ILoggerOption
+  timeMgr: TimeManager
   isGo: (level: string) => boolean
   if: (pred: (() => boolean) | boolean) => ILogger
   tags: (tags: any[]) => ILogger
