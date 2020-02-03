@@ -3,6 +3,7 @@ import {ILoggerOption, ILogger} from './types'
 import {trim} from './utils'
 
 export * from './helper'
+export * from './types'
 
 export default function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger {
   const logger: any = {
