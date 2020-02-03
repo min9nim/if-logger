@@ -32,6 +32,10 @@ describe('logger', () => {
       expect(transport.getCall(0).args[0]).to.be.equal('warn')
       expect(transport.getCall(0).args[2]).to.be.equal('[warn] test')
     })
+    it('should have default value when undefined passed', () => {
+      const logger = createLogger({level: undefined})
+      expect(logger.options.level).to.be.equal('all')
+    })
     describe('function parameter usable', () => {
       it('should be called function parameter', () => {
         const logger = createLogger({transports: [transport]})

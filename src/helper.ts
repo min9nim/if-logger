@@ -1,4 +1,5 @@
 import {ILoggerOption, ILoggerRequired} from './types'
+import {isNode} from './utils'
 
 const NODE_COLOR = {
   red: '\x1b[31m%s\x1b[0m',
@@ -162,10 +163,6 @@ export function getNodeColorMessage(level: string, message: any): any {
     return message
   }
   return NODE_COLOR[LOG_LEVEL[level].color].replace('%s', message)
-}
-
-export function isNode() {
-  return typeof process !== 'undefined' && process.versions && process.versions.node
 }
 
 export function isGo(options, level: string) {

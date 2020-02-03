@@ -1,5 +1,6 @@
 import {DEFAULT_OPTIONS, LOG_LEVEL, buildPrintLog, Stopwatch, TimeManager} from './helper'
 import {ILoggerOption, ILogger} from './types'
+import {trim} from './utils'
 
 export * from './helper'
 
@@ -8,7 +9,7 @@ export default function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): 
     options: {
       ...DEFAULT_OPTIONS,
       ifResult: true,
-      ...options,
+      ...trim(options),
     },
     timeMgr: new TimeManager(),
     if(pred) {
