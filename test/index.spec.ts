@@ -32,6 +32,15 @@ describe('logger', () => {
       expect(transport.getCall(0).args[0]).to.be.equal('warn')
       expect(transport.getCall(0).args[2]).to.be.equal('[warn] test')
     })
+    it('should be usable dynamic level', () => {
+      let level = 'log'
+      const logger = createLogger({level: () => level, transports: [transport]})
+      logger.verbose('hello')
+      expect(transport.calledOnce).to.be.equal(false)
+      level = 'all'
+      logger.verbose('hello')
+      expect(transport.calledOnce).to.be.equal(true)
+    })
     it('should have default value when undefined passed', () => {
       const logger = createLogger({level: undefined})
       expect(logger.options.level).to.be.equal('all')

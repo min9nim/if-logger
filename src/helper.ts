@@ -172,7 +172,8 @@ export function isGo(options, level: string) {
     }
     return options.pred
   }
-  if (LOG_LEVEL[options.level].priority < LOG_LEVEL[level].priority) {
+  const optionLevel = typeof options.level === 'function' ? options.level() : options.level
+  if (LOG_LEVEL[optionLevel].priority < LOG_LEVEL[level].priority) {
     return false
   }
   if (options.levelFilter.length > 0 && !options.levelFilter.includes(level)) {
