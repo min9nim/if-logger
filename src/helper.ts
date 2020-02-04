@@ -166,12 +166,6 @@ export function getNodeColorMessage(level: string, message: any): any {
 }
 
 export function isGo(options, level: string) {
-  if (options.pred !== undefined) {
-    if (typeof options.pred === 'function') {
-      return options.pred()
-    }
-    return options.pred
-  }
   const optionLevel = typeof options.level === 'function' ? options.level() : options.level
   if (LOG_LEVEL[optionLevel].priority < LOG_LEVEL[level].priority) {
     return false
@@ -181,6 +175,12 @@ export function isGo(options, level: string) {
   }
   if (options.tagFilter.length > 0 && !options.tagFilter.some(tag => options.tags.includes(tag))) {
     return false
+  }
+  if (options.pred !== undefined) {
+    if (typeof options.pred === 'function') {
+      return options.pred()
+    }
+    return options.pred
   }
   return true
 }

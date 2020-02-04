@@ -193,8 +193,12 @@ describe('logger', () => {
       it('should be called transport when pred return true', () => {
         const logger = createLogger({level: 'info', transports: [transport]})
         logger.if(() => true).info('info')
-
         expect(transport.calledOnce).to.be.equal(true)
+      })
+      it('should not be logged if level is over option level', () => {
+        const logger = createLogger({level: 'info', transports: [transport]})
+        logger.if(true).verbose('some text')
+        expect(transport.calledOnce).to.be.equal(false)
       })
       it('should be evaluated when pred is function', () => {
         const logger = createLogger({transports: [transport]})
