@@ -4,3 +4,5 @@ dist
 .idea
 .vscode
 test.ts
+yarn-error.log
+yarn.lock

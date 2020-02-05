@@ -1,0 +1,6 @@
+tsconfig.json
+publish*.sh
+README.md
+.github
+yarn-error.log
+yarn.lock
