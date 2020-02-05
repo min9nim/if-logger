@@ -1,4 +1,4 @@
-name: on tag
+name: on release
 
 on:
   release:
@@ -14,7 +14,7 @@ jobs:
           node-version: 10
       - run: npm install
       - run: npm test
-  build & publish:
+  publish:
     needs: test
     runs-on: ubuntu-latest
     steps:
