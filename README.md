@@ -136,7 +136,13 @@ logger.info("some log") // print '[info][AA][BB] some log'
 // tags can be changed dynamically
 logger.tags(["CC", "DD"]).info("some log") // print '[info][CC][DD] some log'
 
-// add tags
+// parameter also can be spreaded
+logger.tags("CC", "DD").info("some log") // print '[info][CC][DD] some log'
+
+// tags can be added dynamically
+logger.addTags(["CC", "DD"]).info("some log") // print '[info][AA][BB][CC][DD] some log'
+
+// parameter also can be spreaded
 logger.addTags(["CC", "DD"]).info("some log") // print '[info][AA][BB][CC][DD] some log'
 ```
 

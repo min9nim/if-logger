@@ -155,6 +155,17 @@ describe('logger', () => {
   })
 
   describe('method', () => {
+    describe('tags', () => {
+      it('should be set new tags', () => {
+        const logger = createLogger({transports: [transport], tags: ['11']})
+        logger.info('hello')
+        expect(transport.getCall(0).args[2]).to.be.equal('[info][11] hello')
+        logger.tags(['22']).info('hello')
+        expect(transport.getCall(1).args[2]).to.be.equal('[info][22] hello')
+        logger.tags('33', '44').info('hello')
+        expect(transport.getCall(2).args[2]).to.be.equal('[info][33][44] hello')
+      })
+    })
     describe('addTags', () => {
       it('should be added new tags', () => {
         const logger = createLogger({transports: [transport], tags: ['11']})
@@ -162,6 +173,8 @@ describe('logger', () => {
         expect(transport.getCall(0).args[2]).to.be.equal('[info][11] hello')
         logger.addTags(['22']).info('hello')
         expect(transport.getCall(1).args[2]).to.be.equal('[info][11][22] hello')
+        logger.addTags('33', '44').info('hello')
+        expect(transport.getCall(2).args[2]).to.be.equal('[info][11][33][44] hello')
       })
     })
     describe('new', () => {

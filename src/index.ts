@@ -1,5 +1,5 @@
 import {DEFAULT_OPTIONS, LOG_LEVEL, buildPrintLog, Stopwatch, TimeManager} from './helper'
-import {ILoggerOption, ILogger} from './types'
+import {ILoggerOption, ILogger, Tags} from './types'
 import {trim} from './utils'
 
 export * from './helper'
@@ -16,10 +16,12 @@ export default function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): 
     if(pred) {
       return createLogger({...this.options, pred})
     },
-    tags(tags: string[]) {
+    tags(...args: Tags) {
+      const tags = Array.isArray(args[0]) ? args[0] : args
       return createLogger({...this.options, tags})
     },
-    addTags(tags: string[]) {
+    addTags(...args: Tags) {
+      const tags = Array.isArray(args[0]) ? args[0] : args
       return createLogger({...this.options, tags: [...this.options.tags, ...tags]})
     },
     new(options: ILoggerOption) {
