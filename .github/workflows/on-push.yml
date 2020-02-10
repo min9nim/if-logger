@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  test:
+  test-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -15,3 +15,4 @@ jobs:
           node-version: 10
       - run: npm install
       - run: npm test
+      - run: npm run build
