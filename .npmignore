@@ -1,6 +1,9 @@
+.github
+git-hooks
+test
+
+yarn-error.log
+yarn.lock
 tsconfig.json
 publish*.sh
 README.md
-.github
-yarn-error.log
-yarn.lock
