@@ -12,6 +12,7 @@ export interface IPrintLog {
 }
 
 export interface ILogger {
+  version: string
   error: IPrintLog
   warn: IPrintLog
   log: IPrintLog

@@ -1,12 +1,14 @@
 import {DEFAULT_OPTIONS, LOG_LEVEL, buildPrintLog, Stopwatch, TimeManager} from './helper'
 import {ILoggerOption, ILogger, Tags} from './types'
 import {trim} from './utils'
+import packageJson from '../package.json'
 
 export * from './helper'
 export * from './types'
 
 export default function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger {
   const logger: any = {
+    version: packageJson.version,
     options: {
       ...DEFAULT_OPTIONS,
       ifResult: true,
