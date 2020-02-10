@@ -7,7 +7,7 @@
     "if",
     "conditional"
   ],
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "author": "min9nim@gmail.com",
   "license": "MIT",
   "scripts": {
