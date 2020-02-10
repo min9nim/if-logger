@@ -1,0 +1,16 @@
+#!/bin/sh
+
+
+npm run test
+if [ $? -ne 0 ]; then
+  echo "Test failed, please fix error and repush"
+  exit 1
+fi
+
+npm run build
+if [ $? -ne 0 ]; then
+  echo "Build failed, please fix error and repush"
+  exit 1
+fi
+
+exit 0
