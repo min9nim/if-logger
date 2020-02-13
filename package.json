@@ -1,7 +1,7 @@
 {
   "name": "if-logger",
   "version": "0.8.3",
-  "description": "`if-logger` can set whether to log dynamically",
+  "description": "`if-logger` can set whether to log or not dynamically",
   "keywords": [
     "logger",
     "if",
