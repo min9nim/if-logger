@@ -9,5 +9,12 @@ export function trim(obj) {
 }
 
 export function isNode() {
-  return typeof process !== 'undefined' && process.versions && process.versions.node
+  if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+    // @ts-ignore
+    if (process.versions.electron) {
+      return false
+    }
+    return true
+  }
+  return false
 }
