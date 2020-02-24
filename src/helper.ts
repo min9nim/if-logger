@@ -139,7 +139,8 @@ export function buildPrintLog(level: string, prop: string) {
       const colorMsg = isNode() ? '\x1b[31m' + time + 'ms' + '\x1b[0m' : time + 'ms' // 브라우져는 컬러 바꾸기가 애매해서 스킵;;
 
       if (!this.options.timeEndLimit) {
-        throw Error('this.options.timeEndLimit is undefined')
+        consoleTransport('warn', '', 'this.options.timeEndLimit is undefined')
+        return
       }
       message = message + ' ' + (time > this.options.timeEndLimit ? colorMsg : time + 'ms')
     }
