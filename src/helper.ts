@@ -134,7 +134,10 @@ export function buildPrintLog(level: string, prop: string) {
       if (time === undefined) {
         return
       }
-      message = message + ' ' + time + 'ms'
+
+      const colorMsg = isNode() ? '\x1b[31m' + time + 'ms' + '\x1b[0m' : time + 'ms' // 브라우져는 컬러 바꾸기가 애매해서 스킵;;
+
+      message = message + ' ' + (time > 1000 ? colorMsg : time + 'ms')
     }
 
     const result = this.options.transports.map(transport => transport(level, args[0], message))
