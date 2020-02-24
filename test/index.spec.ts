@@ -62,6 +62,17 @@ describe('logger', () => {
         logger.info.timeEnd('time check')
         expect(/time check 1\d\dms/.test(transport.getCall(0).args[2])).to.be.equal(true)
       })
+      it('should be scoped by object', async () => {
+        const logger1 = createLogger({level: 'info', transports: [transport]})
+        const logger2 = createLogger({level: 'info', transports: [transport]})
+        logger1.info.time('time check')
+        logger2.info.time('time check')
+        await timer(100)
+        logger1.info.timeEnd('time check')
+        logger2.info.timeEnd('time check')
+        expect(/time check 1\d\dms/.test(transport.getCall(0).args[2])).to.be.equal(true)
+        expect(/time check 1\d\dms/.test(transport.getCall(1).args[2])).to.be.equal(true)
+      })
     })
     describe('plain object usable', () => {
       it('should be printed object', () => {
