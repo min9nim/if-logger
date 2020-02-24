@@ -41,7 +41,7 @@ export interface ILoggerOption {
   pred?: (() => boolean) | boolean
   transports?: ((level: string, message: string, formatMessage: string) => any)[]
   returnValue?: boolean
-  timeEndLimit: number
+  timeEndLimit?: number
 }
 
 export interface ILoggerOptionRequired extends ILoggerOption {

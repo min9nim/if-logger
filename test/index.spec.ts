@@ -62,6 +62,13 @@ describe('logger', () => {
         logger.info.timeEnd('time check')
         expect(/time check 1\d\dms/.test(transport.getCall(0).args[2])).to.be.equal(true)
       })
+      it('should be printed elapsed time', async () => {
+        const logger = createLogger({level: 'info', timeEndLimit: 50, transports: [transport]})
+        logger.info.time('time check')
+        await timer(100)
+        logger.info.timeEnd('time check')
+        expect(transport.getCall(0).args[2].includes('31m')).to.be.equal(true)
+      })
       it('should be scoped by object', async () => {
         const logger1 = createLogger({level: 'info', transports: [transport]})
         const logger2 = createLogger({level: 'info', transports: [transport]})
