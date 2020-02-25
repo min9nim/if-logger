@@ -1,7 +1,7 @@
 import {ILoggerOption, ILoggerRequired} from './types'
 import {isNode} from './utils'
 
-const NODE_COLOR = {
+export const NODE_COLOR = {
   red: '\x1b[31m%s\x1b[0m',
   yellow: '\x1b[33m%s\x1b[0m',
   white: '%s',
@@ -130,28 +130,34 @@ export function buildPrintLog(level: string, prop: string) {
       this.timeMgr.time(timeLabel)
       return
     }
+    let time
     if (prop === 'timeEnd') {
-      const time = this.timeMgr.timeEnd(timeLabel)
+      time = this.timeMgr.timeEnd(timeLabel)
       if (time === undefined) {
         return
       }
-
-      const colorMsg = isNode() ? '\x1b[31m' + time + 'ms' + '\x1b[0m' : time + 'ms' // 브라우져는 컬러 바꾸기가 애매해서 스킵;;
-
-      if (!this.options.timeEndLimit) {
-        consoleTransport('warn', '', 'this.options.timeEndLimit is undefined')
-        return
-      }
-      message = message + ' ' + (time > this.options.timeEndLimit ? colorMsg : time + 'ms')
+      message = message + ' ' + time + 'ms'
     }
 
-    const result = this.options.transports.map(transport => transport(level, args[0], message))
+    const result = this.options.transports.map(transport =>
+      transport(level, args[0], message, time, this.options.timeEndLimit)
+    )
     return this.options.returnValue ? result : undefined
   }
 }
 
-export function consoleTransport(level: string, message: string, formatMessage: string) {
-  const colorMessage = getColorMessage(level, formatMessage)
+export function consoleTransport(
+  level: string,
+  message: string,
+  formatMessage: string,
+  time?: number,
+  timeEndLimit?: number
+) {
+  let text = formatMessage
+  if (time && timeEndLimit && time > timeEndLimit && isNode()) {
+    text = text.replace(/\s\d+ms/, ' \x1b[31m' + time + 'ms' + '\x1b[0m')
+  }
+  const colorMessage = getColorMessage(level, text)
   console[console[level] ? level : 'log'](...colorMessage)
   return colorMessage
 }
