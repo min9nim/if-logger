@@ -152,11 +152,7 @@ export function buildPrintLog(level: string, prop: string) {
 
 export function consoleTransport(level: string, message: string, formatMessage: string) {
   const colorMessage = getColorMessage(level, formatMessage)
-  if (!console[level]) {
-    console.log(...colorMessage)
-    return colorMessage
-  }
-  console[level](...colorMessage)
+  console[console[level] ? level : 'log'](...colorMessage)
   return colorMessage
 }
 
