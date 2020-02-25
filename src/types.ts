@@ -39,7 +39,13 @@ export interface ILoggerOption {
   tagFilter?: string[]
   format?: (level: string, tags: FnOrStr[], message: string) => string
   pred?: (() => boolean) | boolean
-  transports?: ((level: string, message: string, formatMessage: string) => any)[]
+  transports?: ((
+    level: string,
+    message: string,
+    formatMessage: string,
+    time?: number,
+    timeEndLimit?: number
+  ) => any)[]
   returnValue?: boolean
   timeEndLimit?: number
 }
@@ -51,6 +57,12 @@ export interface ILoggerOptionRequired extends ILoggerOption {
   tagFilter: string[]
   format: (level: string, tags: FnOrStr[], message: string) => string
   pred: (() => boolean) | boolean
-  transports: ((level: string, message: string, formatMessage: string) => any)[]
+  transports: ((
+    level: string,
+    message: string,
+    formatMessage: string,
+    time?: number,
+    timeEndLimit?: number
+  ) => any)[]
   returnValue: boolean
 }
