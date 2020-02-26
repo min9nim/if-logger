@@ -1,16 +1,7 @@
 import sinon from 'sinon'
-import createLogger, {getNodeColorMessage} from '../src/index'
+import createLogger from '../src/index'
 import {expect} from 'chai'
-import consoleTransport, {
-  consoleTransportBrowser,
-  consoleTransportNode,
-} from '../src/console-transport'
-
-export function timer(timeout: number) {
-  return new Promise(resolve => {
-    setTimeout(resolve, timeout)
-  })
-}
+import consoleTransport from '../src/console-transport'
 
 let transport: any = consoleTransport
 describe('logger', () => {
@@ -49,30 +40,6 @@ describe('logger', () => {
       const logger = createLogger({level: undefined})
       expect(logger.options.level).to.be.equal('all')
     })
-    it('consoleTransportNode', async () => {
-      const logger = createLogger({
-        timeEndLimit: 50,
-        returnValue: true,
-        transports: [consoleTransportNode],
-      }).addTags('abc')
-      logger.verbose.time('**')
-      await timer(100)
-      const result = logger.verbose.timeEnd('**')
-      expect(result[0][1].includes('31m')).to.be.equal(true)
-    })
-    it('consoleTransportBrowser', async () => {
-      const logger = createLogger({
-        timeEndLimit: 50,
-        returnValue: true,
-        transports: [consoleTransportBrowser],
-      }).addTags('abc')
-      logger.verbose.time('**')
-      await timer(100)
-      const result = logger.verbose.timeEnd('**')
-      expect(result[0][0].match(/%c/g)).to.be.deep.equal(['%c', '%c'])
-      expect(result[0][1]).to.be.equal('color:gray')
-      expect(result[0][2]).to.be.equal('color:red')
-    })
     describe('function parameter usable', () => {
       it('should be called function parameter', () => {
         const logger = createLogger({transports: [transport]})
@@ -83,35 +50,6 @@ describe('logger', () => {
       })
     })
 
-    describe('time, timeEnd', () => {
-      it('should be printed elapsed time', async () => {
-        const logger = createLogger({level: 'info', transports: [transport]})
-        logger.info.time('time check')
-        await timer(100)
-        logger.info.timeEnd('time check')
-        expect(/time check 1\d\dms/.test(transport.getCall(0).args[2])).to.be.equal(true)
-      })
-      it('should be printed elapsed time', async () => {
-        const logger = createLogger({level: 'info', timeEndLimit: 50, transports: [transport]})
-        logger.info.time('time check')
-        await timer(100)
-        logger.info.timeEnd('time check')
-        // expect(transport.getCall(0).args[2]).to.be.equal(true)
-        expect(transport.getCall(0).args[3]).to.be.a('number')
-        expect(transport.getCall(0).args[4]).to.be.equal(50)
-      })
-      it('should be scoped by object', async () => {
-        const logger1 = createLogger({level: 'info', transports: [transport]})
-        const logger2 = createLogger({level: 'info', transports: [transport]})
-        logger1.info.time('time check')
-        logger2.info.time('time check')
-        await timer(100)
-        logger1.info.timeEnd('time check')
-        logger2.info.timeEnd('time check')
-        expect(/time check 1\d\dms/.test(transport.getCall(0).args[2])).to.be.equal(true)
-        expect(/time check 1\d\dms/.test(transport.getCall(1).args[2])).to.be.equal(true)
-      })
-    })
     describe('plain object usable', () => {
       it('should be printed object', () => {
         const origin = console.log
@@ -277,40 +215,6 @@ describe('logger', () => {
         ifLogger.info('some text 5')
         expect(transport.calledThrice).to.be.equal(true)
       })
-    })
-    describe('stopwatch', () => {
-      it('should be called transport', () => {
-        const logger = createLogger({transports: [transport]})
-        const sw = logger.info.stopwatch
-        sw.start('test')
-        sw.check('aa')
-        expect(transport.calledTwice).to.be.equal(true)
-      })
-      it('should be printed elapsed time', () => {
-        const logger = createLogger({transports: [transport]})
-        const sw = logger.info.stopwatch
-        sw.start('test')
-        sw.check('aa')
-        sw.check('bb')
-        expect(transport.getCall(0).args[1]).to.be.equal('[test] start')
-        expect(transport.getCall(1).args[1].includes('[test] aa')).to.be.equal(true)
-        expect(transport.getCall(2).args[1].includes('[test] bb')).to.be.equal(true)
-      })
-      it('should be reset times when reset called', () => {
-        const logger = createLogger({transports: [transport]})
-        const sw = logger.info.stopwatch
-        sw.start('test')
-        sw.check('aa')
-        sw.reset()
-        expect(sw.times.length).to.be.equal(0)
-      })
-    })
-  })
-
-  describe('getNodeColorMessage', () => {
-    it('should return object', () => {
-      const result = getNodeColorMessage('info', {a: 1})
-      expect(result).to.be.deep.equal({a: 1})
     })
   })
 })
