@@ -1,5 +1,4 @@
-import {ILoggerOption, ILoggerRequired} from './types'
-import {isNode, defaultFormat, getHeaderString, getColorMessage, getNodeColorMessage} from './utils'
+import {isNode, getColorMessage} from './utils'
 import {LOG_LEVEL} from './setting'
 
 export function consoleTransportBrowser(
