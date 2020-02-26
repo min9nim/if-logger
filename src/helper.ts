@@ -43,17 +43,6 @@ export const LOG_LEVEL = {
   },
 }
 
-export const DEFAULT_OPTIONS: ILoggerOption = {
-  tagFilter: [],
-  levelFilter: [],
-  level: 'all',
-  tags: [],
-  transports: [consoleTransport],
-  returnValue: false,
-  format: defaultFormat,
-  timeEndLimit: 1000,
-}
-
 export class TimeManager {
   timeLabels = {}
   time(label: string) {
@@ -146,21 +135,34 @@ export function buildPrintLog(level: string, prop: string) {
   }
 }
 
-export function consoleTransport(
-  level: string,
-  message: string,
-  formatMessage: string,
-  time?: number,
-  timeEndLimit?: number
-) {
-  let text = formatMessage
-  if (time && timeEndLimit && time > timeEndLimit && isNode()) {
-    text = text.replace(/\s\d+ms/, ' \x1b[31m' + time + 'ms' + '\x1b[0m')
+export function useConsoleTransport(isNode) {
+  return (
+    level: string,
+    message: string,
+    formatMessage: string,
+    time?: number,
+    timeEndLimit?: number
+  ) => {
+    let text = formatMessage
+    let colorMessage
+    if (time && timeEndLimit && time > timeEndLimit) {
+      if (isNode()) {
+        text = text.replace(/\s\d+ms/, ' \x1b[31m' + time + 'ms' + '\x1b[0m')
+        colorMessage = getColorMessage(level, text)
+      } else {
+        text = text.replace(/\s\d+ms/, ' %c' + time + 'ms')
+        const color = LOG_LEVEL[level].color
+        colorMessage = ['%c' + text, 'color:' + color, 'color:red']
+      }
+    } else {
+      colorMessage = getColorMessage(level, text)
+    }
+    console[console[level] ? level : 'log'](...colorMessage)
+    return colorMessage
   }
-  const colorMessage = getColorMessage(level, text)
-  console[console[level] ? level : 'log'](...colorMessage)
-  return colorMessage
 }
+
+export const consoleTransport = useConsoleTransport(isNode)
 
 export function getColorMessage(level: string, message: string): string[] {
   const color = LOG_LEVEL[level].color
@@ -216,4 +218,15 @@ export function multiArgsHandler(level: string, tags: any[] = [], args: any[]) {
     : [...getColorMessage(level, header), ...args] // In browser, It can be applied `formatting` to only the first argument
   console.log(...result)
   return result
+}
+
+export const DEFAULT_OPTIONS: ILoggerOption = {
+  tagFilter: [],
+  levelFilter: [],
+  level: 'all',
+  tags: [],
+  transports: [consoleTransport],
+  returnValue: false,
+  format: defaultFormat,
+  timeEndLimit: 1000,
 }

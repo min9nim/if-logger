@@ -1,5 +1,9 @@
 import sinon from 'sinon'
-import createLogger, {consoleTransport, getNodeColorMessage} from '../src/index'
+import createLogger, {
+  consoleTransport,
+  getNodeColorMessage,
+  useConsoleTransport,
+} from '../src/index'
 import {expect} from 'chai'
 
 export function timer(timeout: number) {
@@ -45,6 +49,32 @@ describe('logger', () => {
       const logger = createLogger({level: undefined})
       expect(logger.options.level).to.be.equal('all')
     })
+    it('consoleTransport in Node', async () => {
+      const consoleTransport = useConsoleTransport(() => true)
+      const logger = createLogger({
+        timeEndLimit: 50,
+        returnValue: true,
+        transports: [consoleTransport],
+      }).addTags('abc')
+      logger.verbose.time('**')
+      await timer(100)
+      const result = logger.verbose.timeEnd('**')
+      expect(result[0][1].includes('31m')).to.be.equal(true)
+    })
+    it('consoleTransport in Browser', async () => {
+      const consoleTransport = useConsoleTransport(() => false)
+      const logger = createLogger({
+        timeEndLimit: 50,
+        returnValue: true,
+        transports: [consoleTransport],
+      }).addTags('abc')
+      logger.verbose.time('**')
+      await timer(100)
+      const result = logger.verbose.timeEnd('**')
+      expect(result[0][0].match(/%c/g)).to.be.deep.equal(['%c', '%c'])
+      expect(result[0][1]).to.be.equal('color:gray')
+      expect(result[0][2]).to.be.equal('color:red')
+    })
     describe('function parameter usable', () => {
       it('should be called function parameter', () => {
         const logger = createLogger({transports: [transport]})
@@ -54,6 +84,7 @@ describe('logger', () => {
         expect(fn.getCall(0).args[0]).to.be.equal(undefined)
       })
     })
+
     describe('time, timeEnd', () => {
       it('should be printed elapsed time', async () => {
         const logger = createLogger({level: 'info', transports: [transport]})
