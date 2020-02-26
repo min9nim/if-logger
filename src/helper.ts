@@ -63,6 +63,6 @@ export function multiArgsHandler(level: string, tags: any[] = [], args: any[]) {
   const result = isNode()
     ? [header, ...args].map(param => getNodeColorMessage(level, param))
     : [...getColorMessage(level, header), ...args] // In browser, It can be applied `formatting` to only the first argument
-  console.log(...result)
+  console[console[level] ? level : 'log'](...result)
   return result
 }
