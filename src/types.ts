@@ -1,4 +1,5 @@
-import {Stopwatch, TimeManager} from './helper'
+import Stopwatch from './StopWatch'
+import TimeManager from './TimeManager'
 
 export type FnOrStr = (() => string) | string
 export type FnOrStrList = FnOrStr[]
