@@ -1,10 +1,11 @@
-import {consoleTransport, buildPrintLog} from './helper'
+import {buildPrintLog} from './helper'
 import Stopwatch from './StopWatch'
 import TimeManager from './TimeManager'
 import {ILoggerOption, ILogger, Tags} from './types'
 import {trim, defaultFormat} from './utils'
 import packageJson from '../package.json'
 import {LOG_LEVEL} from './setting'
+import consoleTransport from './console-transport'
 
 export * from './helper'
 export * from './types'
