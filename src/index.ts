@@ -1,10 +1,26 @@
-import {DEFAULT_OPTIONS, LOG_LEVEL, buildPrintLog, Stopwatch, TimeManager} from './helper'
+import {consoleTransport, buildPrintLog} from './helper'
+import Stopwatch from './StopWatch'
+import TimeManager from './TimeManager'
 import {ILoggerOption, ILogger, Tags} from './types'
-import {trim} from './utils'
+import {trim, defaultFormat} from './utils'
 import packageJson from '../package.json'
+import {LOG_LEVEL} from './setting'
 
 export * from './helper'
 export * from './types'
+export * from './setting'
+export * from './utils'
+
+export const DEFAULT_OPTIONS: ILoggerOption = {
+  tagFilter: [],
+  levelFilter: [],
+  level: 'all',
+  tags: [],
+  transports: [consoleTransport],
+  returnValue: false,
+  format: defaultFormat,
+  timeEndLimit: 1000,
+}
 
 export default function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): ILogger {
   const logger: any = {
