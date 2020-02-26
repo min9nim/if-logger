@@ -1,4 +1,4 @@
-import {consoleTransport} from './helper'
+import consoleTransport from './console-transport'
 
 export default class TimeManager {
   timeLabels = {}

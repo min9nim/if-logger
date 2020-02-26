@@ -1,10 +1,10 @@
 import sinon from 'sinon'
-import createLogger, {
-  consoleTransport,
-  getNodeColorMessage,
-  useConsoleTransport,
-} from '../src/index'
+import createLogger, {getNodeColorMessage} from '../src/index'
 import {expect} from 'chai'
+import consoleTransport, {
+  consoleTransportBrowser,
+  consoleTransportNode,
+} from '../src/console-transport'
 
 export function timer(timeout: number) {
   return new Promise(resolve => {
@@ -49,24 +49,22 @@ describe('logger', () => {
       const logger = createLogger({level: undefined})
       expect(logger.options.level).to.be.equal('all')
     })
-    it('consoleTransport in Node', async () => {
-      const consoleTransport = useConsoleTransport(() => true)
+    it('consoleTransportNode', async () => {
       const logger = createLogger({
         timeEndLimit: 50,
         returnValue: true,
-        transports: [consoleTransport],
+        transports: [consoleTransportNode],
       }).addTags('abc')
       logger.verbose.time('**')
       await timer(100)
       const result = logger.verbose.timeEnd('**')
       expect(result[0][1].includes('31m')).to.be.equal(true)
     })
-    it('consoleTransport in Browser', async () => {
-      const consoleTransport = useConsoleTransport(() => false)
+    it('consoleTransportBrowser', async () => {
       const logger = createLogger({
         timeEndLimit: 50,
         returnValue: true,
-        transports: [consoleTransport],
+        transports: [consoleTransportBrowser],
       }).addTags('abc')
       logger.verbose.time('**')
       await timer(100)
