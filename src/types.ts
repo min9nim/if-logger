@@ -23,7 +23,7 @@ export interface ILogger {
   options: ILoggerOption
   timeMgr: TimeManager
   isGo: (level: string) => boolean
-  if: (pred: (() => boolean) | boolean) => ILogger
+  if: (pred: any) => ILogger
   tags: (...args: Tags) => ILogger
   addTags: (...args: Tags) => ILogger
   new: (options: ILoggerOption) => ILogger
@@ -39,7 +39,7 @@ export interface ILoggerOption {
   tags?: FnOrStr[]
   tagFilter?: string[]
   format?: (level: string, tags: FnOrStr[], message: string) => string
-  pred?: (() => boolean) | boolean
+  pred?: (() => any) | any
   transports?: ((
     level: string,
     message: string,
@@ -57,7 +57,7 @@ export interface ILoggerOptionRequired extends ILoggerOption {
   tags: FnOrStr[]
   tagFilter: string[]
   format: (level: string, tags: FnOrStr[], message: string) => string
-  pred: (() => boolean) | boolean
+  pred: (() => any) | any
   transports: ((
     level: string,
     message: string,
