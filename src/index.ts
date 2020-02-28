@@ -33,7 +33,7 @@ export default function createLogger(options: ILoggerOption = DEFAULT_OPTIONS): 
     },
     timeMgr: new TimeManager(),
     if(pred) {
-      return createLogger({...this.options, pred})
+      return createLogger({...this.options, pred: pred || Boolean(pred)})
     },
     tags(...args: Tags) {
       const tags = Array.isArray(args[0]) ? args[0] : args
