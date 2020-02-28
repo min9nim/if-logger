@@ -215,6 +215,31 @@ describe('logger', () => {
         ifLogger.info('some text 5')
         expect(transport.calledThrice).to.be.equal(true)
       })
+      it('should not be logged when pred is undefined', () => {
+        const logger = createLogger({transports: [transport]})
+        logger.if(undefined).verbose('some text')
+        expect(transport.calledOnce).to.be.equal(false)
+      })
+      it('should not be logged when pred is null', () => {
+        const logger = createLogger({transports: [transport]})
+        logger.if(null).verbose('some text')
+        expect(transport.calledOnce).to.be.equal(false)
+      })
+      it('should not be logged when pred is 0', () => {
+        const logger = createLogger({transports: [transport]})
+        logger.if(0).verbose('some text')
+        expect(transport.calledOnce).to.be.equal(false)
+      })
+      it('should not be logged when pred is NaN', () => {
+        const logger = createLogger({transports: [transport]})
+        logger.if(NaN).verbose('some text')
+        expect(transport.calledOnce).to.be.equal(false)
+      })
+      it('should not be logged when pred is ""', () => {
+        const logger = createLogger({transports: [transport]})
+        logger.if('').verbose('some text')
+        expect(transport.calledOnce).to.be.equal(false)
+      })
     })
   })
 })
