@@ -2,6 +2,8 @@ import sinon from 'sinon'
 import createLogger from '../src/index'
 import {expect} from 'chai'
 import consoleTransport from '../src/console-transport'
+// @ts-ignore
+import packageJson from '../package.json'
 
 let transport: any = consoleTransport
 describe('logger', () => {
@@ -39,6 +41,12 @@ describe('logger', () => {
     it('should have default value when undefined passed', () => {
       const logger = createLogger({level: undefined})
       expect(logger.options.level).to.be.equal('all')
+    })
+    it('should be returned version', () => {
+      const logger = createLogger({transports: [transport]})
+      logger.verbose(logger.version)
+      expect(transport.getCall(0).args[0]).to.be.equal('verbose')
+      expect(transport.getCall(0).args[1]).to.be.equal(packageJson.version)
     })
     describe('function parameter usable', () => {
       it('should be called function parameter', () => {
