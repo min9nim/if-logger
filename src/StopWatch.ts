@@ -1,4 +1,4 @@
-export default class Stopwatch {
+export default class StopWatch {
   times: any = []
   header
   printLog
