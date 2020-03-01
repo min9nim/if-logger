@@ -2,7 +2,6 @@ import sinon from 'sinon'
 import createLogger from '../src/index'
 import {expect} from 'chai'
 import consoleTransport from '../src/console-transport'
-// @ts-ignore
 import packageJson from '../package.json'
 
 let transport: any = consoleTransport

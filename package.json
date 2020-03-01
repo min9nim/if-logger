@@ -11,7 +11,7 @@
   "author": "min9nim@gmail.com",
   "license": "MIT",
   "scripts": {
-    "build": "tsc -p tsconfig.json --declaration --outDir dist",
+    "build": "rm -r dist && tsc -p tsconfig.prod.json --declaration --outDir dist",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
     "dev": "ts-node test"
   },
