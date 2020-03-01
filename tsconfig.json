@@ -6,7 +6,7 @@
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "noImplicitAny": false,
-    "importHelpers": true,
+    "importHelpers": false, // require `tslib`
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
