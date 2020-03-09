@@ -41,6 +41,10 @@ export function getColorMessage(level: string, message: string): string[] {
   return ['%c' + message, 'color:' + color]
 }
 
+export function useFormat(level, tags, format) {
+  return message => getColorMessage(level, format(level, tags, message))
+}
+
 export function getNodeColorMessage(level: string, message: any): any {
   if (typeof message === 'object') {
     return message

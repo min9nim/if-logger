@@ -53,7 +53,7 @@ describe('logger', () => {
         const fn = sinon.spy()
         logger.info(fn)
         expect(fn.calledOnce).to.be.equal(true)
-        expect(fn.getCall(0).args[0]).to.be.equal(undefined)
+        expect(fn.getCall(0).args[0]).to.be.a('function')
       })
     })
 

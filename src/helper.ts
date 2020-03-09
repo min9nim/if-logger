@@ -1,5 +1,5 @@
 import {ILoggerRequired} from './types'
-import {isNode, getHeaderString, getColorMessage, getNodeColorMessage} from './utils'
+import {isNode, getHeaderString, getColorMessage, getNodeColorMessage, useFormat} from './utils'
 import {LOG_LEVEL} from './setting'
 
 export function buildPrintLog(level: string, prop: string) {
@@ -8,7 +8,7 @@ export function buildPrintLog(level: string, prop: string) {
       return
     }
     if (typeof args[0] === 'function') {
-      const result = args[0]()
+      const result = args[0](useFormat(level, this.options.tags, this.options.format))
       return this.options.returnValue ? result : undefined
     }
     if (args.length > 1 || typeof args[0] === 'object') {
