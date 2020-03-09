@@ -280,9 +280,13 @@ function parameter is possible
 import createLogger from 'if-logger'
 const logger = createLogger()
 
-logger.verbose(() => {
-  console.log('some text')
-}) // print 'some text'
+logger.addTags('AA').verbose(format => {
+  console.log(...format('some text'))
+}) // print '[verbose][AA] some text'
+
+logger.addTags('AA').verbose(format => {
+  console.log(...format('some text1', 'some text2'))
+}) // print '[verbose][AA] some text1 some text2'
 ```
 
 <br>
