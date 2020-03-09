@@ -42,7 +42,9 @@ export function getColorMessage(level: string, message: string): string[] {
 }
 
 export function useFormat(level, tags, format) {
-  return message => getColorMessage(level, format(level, tags, message))
+  return (...args) => {
+    return getColorMessage(level, format(level, tags, args.join(' ')))
+  }
 }
 
 export function getNodeColorMessage(level: string, message: any): any {
