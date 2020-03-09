@@ -54,6 +54,8 @@ describe('logger', () => {
         logger.info(fn)
         expect(fn.calledOnce).to.be.equal(true)
         expect(fn.getCall(0).args[0]).to.be.a('function')
+        expect(fn.getCall(0).args[1]).to.be.a('string')
+        expect(fn.getCall(0).args[2]).to.be.a('array')
       })
     })
 
