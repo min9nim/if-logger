@@ -11,7 +11,8 @@ export function buildPrintLog(level: string, prop: string) {
       const result = args[0](
         useFormat(level, this.options.tags, this.options.format),
         level,
-        this.options.tags
+        this.options.tags,
+        getHeaderString([level, ...this.options.tags])
       )
       return this.options.returnValue ? result : undefined
     }

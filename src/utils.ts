@@ -25,7 +25,7 @@ export function getTagString(str: any): string {
   return '[' + (typeof str === 'function' ? str() : str) + ']'
 }
 
-export function getHeaderString(strList: string[]): string {
+export function getHeaderString(strList: Array<any>): string {
   return strList.map(getTagString).join('')
 }
 
