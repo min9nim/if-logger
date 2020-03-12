@@ -20,7 +20,7 @@ export interface ILogger {
   info: IPrintLog
   verbose: IPrintLog
   debug: IPrintLog
-  options: ILoggerOption
+  options: ILoggerOptionRequired
   timeMgr: TimeManager
   isGo: (level: string) => boolean
   if: (pred: any) => ILogger
