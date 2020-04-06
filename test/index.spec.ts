@@ -121,8 +121,9 @@ describe('logger', () => {
         const logger = createLogger({format, transports: [transport]})
 
         logger.tags(['AA', 'BB']).verbose('some text')
-
         expect(transport.getCall(0).args[2]).to.be.equal('(verbose)(AA,BB) some text')
+        // logger.tags(['AA', 'BB']).verbose('aa', 'bb')
+        // expect(transport.getCall(1).args[2]).to.be.equal('(verbose)(AA,BB) some text')
       })
     })
     describe('level', () => {
