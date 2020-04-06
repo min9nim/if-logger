@@ -17,7 +17,7 @@ export function buildPrintLog(level: string, prop: string) {
       return this.options.returnValue ? result : undefined
     }
     if (args.length > 1 || typeof args[0] === 'object') {
-      const result = multiArgsHandler(level, this.options.tags, args)
+      const result = multiArgsHandler(this.options.format, level, this.options.tags, args)
       return this.options.returnValue ? result : undefined
     }
 
@@ -63,8 +63,9 @@ export function isGo(options, level: string) {
   return true
 }
 
-export function multiArgsHandler(level: string, tags: any[] = [], args: any[]) {
-  const header = getHeaderString([level, ...tags])
+export function multiArgsHandler(format: any, level: string, tags: any[] = [], args: any[]) {
+  const header = format(level, tags, '').trim()
+
   const result = isNode()
     ? [header, ...args].map(param => getNodeColorMessage(level, param))
     : [...getColorMessage(level, header), ...args] // In browser, It can be applied `formatting` to only the first argument
