@@ -33,6 +33,11 @@ export function defaultFormat(level: string, tags: any[] = [], message: string):
   return getHeaderString([level, ...tags]) + ' ' + message
 }
 
+export function simpleFormat(level, tags, message) {
+  const tagstr = tags.map(tag => (typeof tag === 'function' ? tag() : tag)).join(' ')
+  return `${level[0].toUpperCase()} ${tagstr} | ${message}`
+}
+
 export function getColorMessage(level: string, message: string): string[] {
   const color = LOG_LEVEL[level].color
   if (isNode()) {
