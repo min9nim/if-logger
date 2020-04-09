@@ -4,6 +4,11 @@ import {LOG_LEVEL} from './setting'
 
 export function buildPrintLog(level: string, prop: string) {
   return function printLog(this: ILoggerRequired, ...args: any[]) {
+    if (!this) {
+      throw Error(
+        '`this` is undefined. Do you ever pass `logger.XXXX` as a parameter? Then the `this` binding is required'
+      )
+    }
     if (!isGo(this.options, level)) {
       return
     }
