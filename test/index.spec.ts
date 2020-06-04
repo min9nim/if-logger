@@ -149,6 +149,18 @@ describe('logger', () => {
         expect(transport.calledThrice).to.be.equal(true)
       })
     })
+    describe('customTransport', () => {
+      it('should be usable pred option', () => {
+        const customTransport = sinon.spy()
+        const logger = createLogger({transports: [transport, customTransport]})
+        logger.info('some text 1')
+        expect(customTransport.calledOnce).to.be.equal(true)
+        logger.info('some text 2')
+        expect(customTransport.calledTwice).to.be.equal(true)
+        logger.verbose('some text 3')
+        expect(customTransport.calledThrice).to.be.equal(true)
+      })
+    })
   })
 
   describe('method', () => {
