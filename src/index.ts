@@ -11,6 +11,7 @@ export * from './helper'
 export * from './types'
 export * from './setting'
 export * from './utils'
+export {consoleTransport}
 
 export const DEFAULT_OPTIONS: ILoggerOption = {
   tagFilter: [],
