@@ -84,7 +84,7 @@ ifLogger.info('some text 5') // do not print
 ```javascript
 import createLogger from 'if-logger'
 
-const logger = createLogger({level: 'info'})
+const logger = createLogger({ level: 'info' })
 
 logger.log('log-text') // will be printed '[log] log-text'
 logger.info('info-text') // will be printed '[info] info-text'
@@ -96,7 +96,7 @@ Dynamic level is also usable
 ```javascript
 import createLogger from 'if-logger'
 
-const logger = createLogger({level: () => 'info'}) // level function is evaluated when print log
+const logger = createLogger({ level: () => 'info' }) // level function is evaluated when print log
 
 logger.log('log-text') // will be printed '[log] log-text'
 logger.info('info-text') // will be printed '[info] info-text'
@@ -113,11 +113,11 @@ logger.verbose('verbose-text') // do not print
 ```javascript
 import createLogger from 'if-logger'
 
-const logger = createLogger({level: 'info'})
+const logger = createLogger({ level: 'info' })
 
 logger.info('hello 1') // print
 logger.verbose('hello 2') // do not print
-const logger2 = logger.new({level: 'verbose'})
+const logger2 = logger.new({ level: 'verbose' })
 logger2.info('hello 3') // print
 logger2.verbose('hello 4') // print
 ```
@@ -129,7 +129,7 @@ logger2.verbose('hello 4') // print
 ```javascript
 import createLogger from 'if-logger'
 
-const logger = createLogger({tag: ['AA', 'BB']}) // default tags is set
+const logger = createLogger({ tag: ['AA', 'BB'] }) // default tags is set
 
 logger.info('some log') // print '[info][AA][BB] some log'
 
@@ -152,7 +152,7 @@ dynamic tag usable
 import createLogger from 'if-logger'
 
 const time = () => String(new Date()).substr(16, 8)
-const logger = createLogger({tags: [time]})
+const logger = createLogger({ tags: [time] })
 
 logger.info('some log') // print '[info][12:40:57] some log'
 // some biz logic
@@ -168,7 +168,7 @@ logger.info('some log') // print '[info][12:44:36] some log'
 ```javascript
 import createLogger from 'if-logger'
 
-const logger = createLogger({level: 'all', levelFilter: ['error', 'info']})
+const logger = createLogger({ level: 'all', levelFilter: ['error', 'info'] })
 
 logger.error('some text') // print
 logger.info('some text') // print
@@ -182,7 +182,7 @@ logger.log('some text') // do not print
 ```javascript
 import createLogger from 'if-logger'
 
-const logger = createLogger({level: 'all', tagFilter: ['AB', 'BB']})
+const logger = createLogger({ level: 'all', tagFilter: ['AB', 'BB'] })
 
 logger.tags(['AA', 'BB']).error('some text') // print
 logger.tags(['CC', 'DD']).info('some text') // do not print
@@ -250,7 +250,7 @@ function format(level, tags, message) {
   const tagstr = tags.join(',')
   return `(${level})(${tagstr}) ${message}`
 }
-const logger = createLogger({format})
+const logger = createLogger({ format })
 
 logger.tags(['AA', 'BB']).verbose('some text') // print '(verbose)(AA,BB) some text'
 ```
@@ -258,9 +258,9 @@ logger.tags(['AA', 'BB']).verbose('some text') // print '(verbose)(AA,BB) some t
 `simpleFormat` supported
 
 ```javascript
-import createLogger, {simpleFormat} from 'if-logger'
+import createLogger, { simpleFormat } from 'if-logger'
 
-const logger = createLogger({format: simpleFormat})
+const logger = createLogger({ format: simpleFormat })
 
 logger.tags(['AA', 'BB']).verbose('some text') // print 'V AA BB | some text'
 ```
@@ -275,8 +275,8 @@ Plain objects and multiple arguments are loggable. But the option of `format`, `
 import createLogger from 'if-logger'
 const logger = createLogger()
 
-logger.verbose({a: 1}) // print [verbose] {a:1}
-logger.verbose({a: 1}, {b: 2}) // print [verbose] {a:1} {b:2}
+logger.verbose({ a: 1 }) // print [verbose] {a:1}
+logger.verbose({ a: 1 }, { b: 2 }) // print [verbose] {a:1} {b:2}
 logger.verbose('aa', 'bb', 11) // print [verbose] aa bb 11
 ```
 
@@ -290,11 +290,11 @@ function parameter is possible
 import createLogger from 'if-logger'
 const logger = createLogger()
 
-logger.addTags('AA').verbose(format => {
+logger.addTags('AA').verbose((format) => {
   console.log(...format('some text'))
 }) // print '[verbose][AA] some text'
 
-logger.addTags('AA').verbose(format => {
+logger.addTags('AA').verbose((format) => {
   console.log(...format('some text1', 'some text2'))
 }) // print '[verbose][AA] some text1 some text2'
 ```
@@ -303,10 +303,12 @@ logger.addTags('AA').verbose(format => {
 
 ## Custom transport
 
+Log message is not be trasfered to `customTransport` **when multi arguments or `time`, `timeEnd` used**
+
 ```javascript
-import createLogger, {consoleTransport} from 'if-logger'
+import createLogger, { consoleTransport } from 'if-logger'
 // consoleTransport is default transport
-const logger = createLogger({transports: [consoleTransport, customTransport]})
+const logger = createLogger({ transports: [consoleTransport, customTransport] })
 logger.debug('some text')
 function customTransport(level, message, formatMessage) {
   /*
