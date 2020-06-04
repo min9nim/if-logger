@@ -303,7 +303,7 @@ logger.addTags('AA').verbose((format) => {
 
 ## Custom transport
 
-Log message is not be trasfered to `customTransport` **when multi arguments or `time`, `timeEnd` used**
+Log message is not be trasfered to `customTransport` **when multi arguments or `time`, `timeEnd` used** (Only one string arguments is transfered to `customTransport`)
 
 ```javascript
 import createLogger, { consoleTransport } from 'if-logger'
