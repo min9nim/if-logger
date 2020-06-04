@@ -255,6 +255,16 @@ const logger = createLogger({format})
 logger.tags(['AA', 'BB']).verbose('some text') // print '(verbose)(AA,BB) some text'
 ```
 
+`simpleFormat` supported
+
+```javascript
+import createLogger, {simpleFormat} from 'if-logger'
+
+const logger = createLogger({format: simpleFormat})
+
+logger.tags(['AA', 'BB']).verbose('some text') // print 'V AA BB | some text'
+```
+
 <br>
 
 ## Plain Object & Multiple arguments
