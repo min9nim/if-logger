@@ -129,7 +129,7 @@ logger2.verbose('hello 4') // print
 ```javascript
 import createLogger from 'if-logger'
 
-const logger = createLogger({ tag: ['AA', 'BB'] }) // default tags is set
+const logger = createLogger({ tags: ['AA', 'BB'] }) // default tags is set
 
 logger.info('some log') // print '[info][AA][BB] some log'
 
